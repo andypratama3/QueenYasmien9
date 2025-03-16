@@ -1,9 +1,10 @@
+
 <div class="container-fluid">
     <div class="row py-3 border-bottom">
 
       <div class="col-sm-6 col-lg-3 text-center text-sm-start">
         <div class="main-logo">
-          <a href="#">
+          <a href="{{ route('home') }}">
             <img src="{{ asset('assets/images/logo-width.png') }}" alt="logo" class="img-fluid" style="width: 80%;">
           </a>
         </div>
@@ -23,7 +24,7 @@
         <ul class="d-flex justify-content-end list-unstyled m-0">
           <li>
             <a href="#" class="rounded-circle bg-light p-2 mx-1">
-              <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#user"></use></svg>
+                <i class='bx bx-user-circle'></i>
             </a>
           </li>
           <li>
@@ -31,24 +32,28 @@
               <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#heart"></use></svg>
             </a>
           </li>
+          @auth
           <li class="d-lg-none">
-            <a href="#" class="rounded-circle bg-light p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
-              <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#cart"></use></svg>
-            </a>
-          </li>
-          <li class="d-lg-none">
-            <a href="#" class="rounded-circle bg-light p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSearch" aria-controls="offcanvasSearch">
-              <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#search"></use></svg>
-            </a>
-          </li>
+              <a href="#" class="rounded-circle bg-light p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
+                  <i class='bx bxs-cart' ></i>
+                </a>
+            </li>
+            @endauth
         </ul>
+
+        @auth
 
         <div class="cart text-end d-none d-lg-block dropdown">
           <button class="border-0 bg-transparent d-flex flex-column gap-2 lh-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
-            <span class="fs-6 text-muted dropdown-toggle">Your Cart</span>
-            <span class="cart-total fs-5 fw-bold">$1290.00</span>
+            <span class="fs-6 text-muted dropdown-toggle">Keranjang</span>
+            <span class="cart-total fs-8 fw-bold">
+                {{ 'Rp. ' . number_format($totalPrice, 0, ',', '.') }}
+            </span>
+
           </button>
         </div>
+        @endauth
+
       </div>
 
     </div>
@@ -70,24 +75,23 @@
             </div>
 
             <div class="offcanvas-body">
-              <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
-                <li class="nav-item active">
-                  <a href="/" class="nav-link active">Home</a>
-                </li>
-                <li class="nav-item active">
-                  <a href="#product" class="nav-link">Produk</a>
-                </li>
-                <li class="nav-item dropdown">
-                  <a href="#men" class="nav-link">Tentang</a>
-                </li>
-                <li class="nav-item">
-                  <a href="#kids" class="nav-link">Catalog</a>
-                </li>
-                <li class="nav-item">
-                  <a href="#blog" class="nav-link">Testimonial</a>
-                </li>
-              </ul>
-
+                <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
+                    <li class="nav-item active">
+                        <a href="/" class="nav-link active">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ Request::routeIs('home') ? '#product' : url('/#product') }}" class="nav-link">Produk</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="{{ Request::routeIs('home') ? '#men' : url('/#men') }}" class="nav-link">Tentang</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('catalog.index') }}" class="nav-link {{ Route::currentRouteName() == 'catalog.index' ? 'active' : '' }}">Katalog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ Request::routeIs('home') ? '#blog' : url('/#blog') }}" class="nav-link">Testimonial</a>
+                    </li>
+                </ul>
             </div>
 
           </div>

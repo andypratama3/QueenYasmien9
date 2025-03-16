@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pemesanans', function (Blueprint $table) {
+        Schema::create('charts', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->integer('gross_amount');
-            $table->string('pengiriman')->nullable();
-            $table->enum('status_pemesanan', ['pending','selesai','cancel'])->default('pending');
-            $table->string('status_pembayaran');
             $table->foreignUuId('user_id')->references('id')->on('users');
-            $table->string('slug');
+            $table->foreignUuId('product_id')->references('id')->on('products');
+            $table->integer('qty');
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pemesanans');
+        Schema::dropIfExists('charts');
     }
 };

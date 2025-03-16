@@ -18,6 +18,11 @@
         <i class="align-middle bx bxl-product-hunt" data-feather="product"></i> <span class="align-middle">Produk</span>
     </a>
 </li>
+<li class="sidebar-item {{ request()->routeIs('dashboard.catalog.*') ? 'active' : '' }}">
+    <a class="sidebar-link" href="{{ route('dashboard.catalog.index') }}">
+        <i class="align-middle bx bx-news" data-feather="bx-news"></i> <span class="align-middle">Katalog</span>
+    </a>
+</li>
 
 
 <li class="sidebar-header">

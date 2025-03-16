@@ -14,7 +14,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasRoles, HasUuids;
+    use HasApiTokens, HasUuids;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
