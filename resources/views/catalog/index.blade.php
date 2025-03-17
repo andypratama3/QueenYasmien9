@@ -24,7 +24,7 @@
               </div>
               <div class="post-header">
                 <h3 class="post-title">
-                  <a href="#" class="text-decoration-none">{{ $catalog->name }}</a>
+                  <a href="{{ route('catalog.show', $catalog->slug) }}" class="text-decoration-none">{{ $catalog->name }}</a>
                 </h3>
                 <p>
                     {!! Str::limit($catalog->desc, 150)  !!}

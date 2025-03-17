@@ -17,15 +17,27 @@
 
                         <div class="swiper-slide">
                             <div class="row banner-content p-5">
-                            <div class="content-wrapper col-md-7">
-                                <div class="categories my-3">100% natural</div>
-                                <h3 class="display-4">Fresh Smoothie & Summer Juice</h3>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dignissim massa diam elementum.</p>
-                                <a href="#product" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1 px-4 py-3 mt-3">Shop Now</a>
+                            <div class="content-wrapper col-md-12">
+                                <div class="categories my-3">Queen Yasmien9</div>
+                                <h5 class="">Program Reseller</h5>
+                                <p class="text-black">
+
+                                    PAKET SKINCARE LENGKAP
+                                    <br>
+                                    Harga Normal: Rp300.000/paket
+
+                                    Harga Reseller:
+                                    <br>- 3 Paket: Rp290.000/paket | Total: Rp870.000
+                                    <br>- 6 Paket: Rp280.000/paket | Total: Rp1.680.000
+                                    <br>- 12 Paket: Rp270.000/paket | Total: Rp3.240.000
+                                    <br>- 24 Paket: Rp260.000/paket | Total: Rp6.240.000
+                                    <br>- 50 Paket (DIST): Rp250.000/paket | Total: Rp12.500.000
+                                    <br>- 100 Paket: Rp240.000/paket | Total: Rp24.000.000
+                                    <br>- 500 Paket (AO): Rp235.000/paket | Total: Rp117.500.000
+                                </p>
+                                <a href="#product" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1 px-4 py-3 mt-3">Beli Sekarang</a>
                             </div>
-                            <div class="img-wrapper col-md-5">
-                                <img src="images/product-thumb-1.png" class="img-fluid">
-                            </div>
+
                             </div>
                         </div>
 
@@ -131,7 +143,15 @@
                       <h3>{{ \Str::limit($product->name, 20, '...') }}</h3>
 
                       <span class="qty">{{ $product->stock }} Unit</span><span class="rating"><svg width="24" height="24" class="text-primary"><use xlink:href="#star-solid"></use></svg> 4.5</span>
-                      <span class="price">{{ 'Rp. ' . number_format($product->price, 0, ',', '.'); }}</span>
+                      <span class="price">
+                        @if ($product->price)
+                        <p>{{ 'Rp. ' . number_format((float) ($product->price ?? 0), 0, ',', '.') }}</p>
+                        @elseif ($product->product_reseller->isNotEmpty())
+                            {{ 'Rp. ' . number_format((float) $product->product_reseller->first()->price_reseller, 0, ',', '.') }}
+                        @endif
+                    </span>
+
+
                       <div class="d-flex align-items-center justify-content-between">
                         <div class="input-group product-qty">
                             <span class="input-group-btn">
@@ -360,12 +380,18 @@
               <div class="product-item swiper-slide">
                 <figure>
                   <a href="{{ asset('storage/product/'.$product->foto) }}" title="{{ $product->name }}" data-lightbox="product-best" >
-                    <img src="{{ asset('storage/product/'.$product->foto) }}"  class="tab-image">
+                    <img src="{{ asset('storage/product/'.$product->foto) }}"  class="tab-image img-fluid">
                   </a>
                 </figure>
                 <h3>{{ $product->name }}</h3>
                 <span class="qty">{{ $product->stock }} Unit</span>
-                <span class="price">Rp. {{ number_format($product->price, 0, ',', '.') }}</span>
+                <span class="price">
+                    @if ($product->price != null)
+                    <p>{{ 'Rp. ' . number_format((float) ($product->price ?? 0), 0, ',', '.') }}</p>
+                    @elseif ($product->product_reseller->isNotEmpty())
+                        {{ 'Rp. ' . number_format((float) $product->product_reseller->first()->price_reseller, 0, ',', '.') }}
+                    @endif
+                </span>
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="input-group product-qty">
                         <span class="input-group-btn">
@@ -385,11 +411,11 @@
                 </button>
               </div>
 
+            </div>
               @empty
 
               @endforelse
 
-            </div>
           </div>
           <!-- / products-carousel -->
 

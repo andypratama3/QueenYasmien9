@@ -35,24 +35,23 @@
     </a>
 </li>
 
-
-{{--
-
 <li class="sidebar-item ">
-    <a class="sidebar-link {{ request()->routeIs('dashboard.data.center.*') || request()->routeIs('dashboard.category.data.center.*') ? 'collapsed' : '' }}" href="#dataCenterDropdown" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="dataCenterDropdown">
-        <i class="align-middle" data-feather="database"></i> <span class="align-middle">Data Center</span>
-        <i class="align-middle float-end" data-feather="chevron-right"></i>
+    <a class="sidebar-link {{ request()->routeIs('dashboard.settings.*') ? 'collapsed' : '' }}" href="#settingsDropDown" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="settingsDropDown">
+        <i class="align-middle bx bx-cog"></i> <span class="align-middle">Pengaturan</span>
+        <i class="align-middle float-end bx bx-chevron-right" data-feather="chevron-right"></i>
     </a>
-    <ul class="collapse list-unstyled mx-4 {{ request()->routeIs('dashboard.data.center.*') || request()->routeIs('dashboard.category.data.center.*') ? 'show' : '' }}" id="dataCenterDropdown">
-        <li class="sidebar-item {{ request()->routeIs('dashboard.category.data.center.*') ? 'active' : '' }}">
-            <a class="sidebar-link" href="{{ route('dashboard.category.data.center.index') }}">
-                <i class="align-middle" data-feather="list"></i><span class="align-middle">Kategori Data</span>
+    <ul class="collapse list-unstyled mx-4 {{ request()->routeIs('dashboard.settings.*') ? 'show' : '' }}" id="settingsDropDown">
+        {{-- @canany(['role-view','role-manage','user-view','user-manage']) --}}
+        <li class="sidebar-item {{ request()->routeIs('dashboard.settings.roles.*') ? 'active' : '' }}">
+            <a class="sidebar-link" href="{{ route('dashboard.settings.roles.index') }}">
+                <i class="align-middle" data-feather="list"></i><span class="align-middle">Role</span>
             </a>
         </li>
-        <li class="sidebar-item {{ request()->routeIs('dashboard.data.center.index') ? 'active' : '' }}">
-            <a class="sidebar-link" href="{{ route('dashboard.data.center.index') }}">
-                <i class="align-middle" data-feather="database"></i><span class="align-middle">Data Center</span>
+        <li class="sidebar-item {{ request()->routeIs('dashboard.settings.users.*') ? 'active' : '' }}">
+            <a class="sidebar-link" href="{{ route('dashboard.settings.users.index') }}">
+                <i class="align-middle" data-feather="users"></i><span class="align-middle">Pengguna</span>
             </a>
         </li>
+        {{-- @endcanany --}}
     </ul>
-</li> --}}
+</li>

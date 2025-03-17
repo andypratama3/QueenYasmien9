@@ -12,6 +12,7 @@
         "laravel/jetstream": "^5.3",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
+        "midtrans/midtrans-php": "^2.6",
         "spatie/laravel-permission": "^6.16",
         "tightenco/ziggy": "^2.0",
         "yajra/laravel-datatables-oracle": "^12.0",

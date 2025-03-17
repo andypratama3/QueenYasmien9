@@ -13,11 +13,15 @@ return new class extends Migration
     {
         Schema::create('pemesanans', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('order_id');
             $table->integer('gross_amount');
             $table->string('pengiriman')->nullable();
+            $table->text('alamat');
             $table->enum('status_pemesanan', ['pending','selesai','cancel'])->default('pending');
-            $table->string('status_pembayaran');
+            $table->string('status_pembayaran')->default('pending');
             $table->foreignUuId('user_id')->references('id')->on('users');
+            $table->foreignUuId('products_reseller_id')->nullable()->references('id')->on('products_reseller');
+            $table->string('snap_token')->nullable();
             $table->string('slug');
             $table->timestamps();
         });

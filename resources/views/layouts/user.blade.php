@@ -29,7 +29,16 @@
                 <h6 class="my-0">{{ $chart->product->name }}</h6>
                 <small class="text-body-secondary">Jumlah: {{ $chart->qty }}</small>
               </div>
-              <span class="text-body-secondary">{{ 'Rp. ' . number_format($chart->product->price, 0, ',', '.'); }}</span>
+              @if ($chart->price > 0)
+                <span class="text-body-secondary">
+                    {{ 'Rp. ' . number_format((float) $chart->price, 0, ',', '.') }}
+                </span>
+            @elseif (!empty($chart->product_reseller) && $chart->product_reseller->isNotEmpty())
+                <span class="text-body-secondary">
+                    {{ 'Rp. ' . number_format((float) $chart->product_reseller->first()->price_reseller, 0, ',', '.') }}
+                </span>
+            @endif
+
             </li>
             @endforeach
             <li class="list-group-item d-flex justify-content-between lh-sm mt-5">

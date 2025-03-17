@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\ProductReseller;
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -25,7 +26,8 @@ class ProductController extends Controller
                 return Str::limit($row->name, 25);
             })
             ->addColumn('price', function ($row) {
-                return 'Rp. ' . number_format($row->price, 0, ',', '.');
+                return 'Rp. ' . number_format((float) ($row->price ?? 0), 0, ',', '.');
+
             })
             ->addColumn('category', function ($row) {
                 return $row->category->name ?? '-';
@@ -62,9 +64,6 @@ class ProductController extends Controller
 
         $file_name = null;
 
-
-
-
         // Handle image file upload
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
@@ -74,14 +73,30 @@ class ProductController extends Controller
             $file->move($upload_path, $file_name);
         }
 
+
         $products = Product::create([
             'name' => $request->name,
             'stock' => $request->stock,
             'category_id' => $request->category_id,
             'desc' => $request->desc,
-            'price' => str_replace('.', '', $request->price),
+            'price' => $request->price !== null ? (int) str_replace('.', '', $request->price) : 0,
             'foto' => $file_name,
+
         ]);
+
+        if ($request->has('name_packet') && is_array($request->name_packet)) {
+            foreach ($request->name_packet as $key => $packet_name) {
+
+                if (!empty($packet_name)) {
+                    ProductReseller::create([
+                        'product_id' => $products->id,
+                        'name' => $packet_name, // Pastikan name ada isinya
+                        'price_reseller' => str_replace(['Rp ', '.'], '', $request->price_reseller[$key] ?? 0), // Ambil dari price_reseller
+                        'jumlah' => $request->jumlah[$key] ?? 0,
+                    ]);
+                }
+            }
+        }
 
         return redirect()->route('dashboard.product.index')->with('success', 'Berhasil Menambahkan Produk');
 
@@ -90,7 +105,9 @@ class ProductController extends Controller
     public function show($slug)
     {
         $product = Product::where('slug', $slug)->firstOrFail();
-        return view('dashboard.product.show', compact('product'));
+        $resellerPackages = ProductReseller::where('product_id', $product->id)->get();
+
+        return view('dashboard.product.show', compact('product','resellerPackages'));
     }
 
 
@@ -99,7 +116,10 @@ class ProductController extends Controller
         $product = Product::where('slug', $slug)->firstOrFail();
         $categorys = Category::orderBy('name', 'asc')->get();
 
-        return view('dashboard.product.edit', compact('product','categorys'));
+        // Check if the product is in "Paket Reseller" category
+        $resellerPackages = ProductReseller::where('product_id', $product->id)->get();
+
+        return view('dashboard.product.edit', compact('product', 'categorys', 'resellerPackages'));
     }
 
     public function update(Request $request, $slug)
@@ -111,7 +131,7 @@ class ProductController extends Controller
         ]);
 
         $product = Product::where('slug', $slug)->firstOrFail();
-        $file_name = $product->foto; // Simpan gambar lama jika tidak diubah
+        $file_name = $product->foto; // Gunakan gambar lama jika tidak ada yang diunggah
 
         // Handle image file upload
         if ($request->hasFile('foto')) {
@@ -133,18 +153,32 @@ class ProductController extends Controller
             'stock' => $request->stock,
             'category_id' => $request->category_id,
             'desc' => $request->desc,
-            'price' => str_replace('.', '', $request->price),
+            'price' => str_replace('.', '', $request->price) ?? null,
             'foto' => $file_name,
         ]);
+
+        // **Perbarui data reseller jika produk adalah "Paket Reseller"**
+        if ($request->has('name_packet') && is_array($request->name_packet)) {
+            if (!empty($packet_name)) {
+                ProductReseller::where('product_id', $product->id)->delete();
+                foreach ($request->name_packet as $key => $packet_name) {
+                    ProductReseller::create([
+                        'product_id' => $product->id,
+                        'name' => $packet_name,
+                        'price_reseller' => str_replace(['Rp ', '.'], '', $request->price_reseller[$key] ?? 0),
+                        'jumlah' => $request->jumlah[$key] ?? 0,
+                    ]);
+                }
+            }
+        }
 
         return redirect()->route('dashboard.product.index')->with('success', 'Produk berhasil diperbarui');
     }
 
-
-
     public function destroy($slug)
     {
         $product = Product::where('slug', $slug)->firstOrFail();
+        $product->product_reseller()->delete(); // Hapus data
         $actions = $product->delete();
 
         if($actions) {

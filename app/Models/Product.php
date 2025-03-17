@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Product extends Model
@@ -20,6 +21,7 @@ class Product extends Model
         'desc',
         'foto',
         'price',
+        'price_reseller',
         'slug',
     ];
 
@@ -27,6 +29,16 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function product_reseller(): HasMany
+    {
+        return $this->hasMany(ProductReseller::class, 'product_id', 'id');
+    }
+
+    public function pemesanan(): BelongsToMany
+    {
+        return $this->belongsToMany(Pemesanan::class, 'product_checkout');
     }
 
     public function setNameAttribute($value)

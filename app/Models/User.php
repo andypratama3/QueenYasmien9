@@ -9,12 +9,14 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasUuids;
+    use HasApiTokens, HasUuids, HasRoles;
+
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
@@ -65,5 +67,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+
+    public function role(): HasMany
+    {
+        return $this->hasMany(Role::class, 'id', 'user_id');
     }
 }

@@ -19,7 +19,7 @@
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <label class="form-label" for="name">Nama</label>
+                                        <label class="form-label" for="name">Nama <code>*</code></label>
                                         <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}">
                                         @error('name')
                                             <div class="invalid-feedback">
@@ -29,17 +29,20 @@
                                     </div>
 
                                     <div class="col-md-12 mt-2">
-                                        <label class="form-label" for="category">Kategori Produk</label>
+                                        <label class="form-label" for="category">Kategori Produk <code>*</code></label>
                                         <select name="category_id" id="category" class="form-control">
                                             <option value="" selected>Pilih Kategori</option>
                                             @foreach ($categorys as $category)
-                                                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                                <option value="{{ $category->id }}" data-name="{{ $category->name }}"
+                                                    {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                                    {{ $category->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
 
-                                    <div class="col-md-12 mt-2">
-                                        <label class="form-label" for="price">Harga</label>
+                                    <div class="col-md-12 mt-2" id="price_container">
+                                        <label class="form-label" for="price">Harga <code>*</code></label>
                                         <input type="string" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price') }}">
                                         @error('price')
                                             <div class="invalid-feedback">
@@ -48,8 +51,37 @@
                                         @enderror
                                     </div>
 
+                                    <div class="col-md-12 mt-2 d-none" id="category_reseller">
+                                        <table class="table table-bordered" id="table_packet">
+                                            <tr>
+                                                <th class="w-25">Nama Paket</th>
+                                                <th class="w-25">Jumlah</th>
+                                                <th class="w-25">Harga</th>
+                                                <th class="w-25"><button type="button" class="btn btn-primary btn-sm btn-add">+</button></th>
+                                            </tr>
+
+                                                <tr>
+                                                    <td>
+                                                        <input type="text" class="form-control " id="name_packet" name="name_packet[]" value="{{ old('name_packet') }}">
+                                                    </td>
+                                                    <td style="width: 20%;">
+                                                        <input type="number" class="form-control" name="jumlah[]" placeholder="Jumlah Paket" value="{{ old('jumlah') }}">
+                                                    </td>
+                                                    <td style="width: 20%;">
+                                                        <input type="text" class="form-control price-input" name="price_reseller[]" placeholder="Harga Paket" value="{{ old('price_reseller') }}">
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-danger btn-sm btn-delete">-</button>
+                                                        <button type="button" class="btn btn-primary btn-sm btn-add">+</button>
+                                                    </td>
+                                                </tr>
+                                        </table>
+                                    </div>
+
+
+
                                     <div class="col-md-12 mt-2">
-                                        <label class="form-label" for="stock">Stok</label>
+                                        <label class="form-label" for="stock">Stok <code>*</code></label>
                                         <input type="number" class="form-control @error('stock') is-invalid @enderror" id="stock" name="stock" value="{{ old('stock') }}">
                                         @error('stock')
                                             <div class="invalid-feedback">
@@ -60,7 +92,7 @@
 
                                     <div class="col-md-12 mt-2">
                                         <div class="col-md-12">
-                                            <label for="foto" class="form-label">Gambar</label>
+                                            <label for="foto" class="form-label">Gambar <code>*</code></label>
                                             <input type="file"
                                                    class="form-control @error('foto') is-invalid @enderror"
                                                    id="foto"
@@ -82,7 +114,7 @@
                                     </div>
 
                                     <div class="col-md-12 mt-2 mb-6">
-                                        <label class="form-label" for="name">Deskripsi</label>
+                                        <label class="form-label" for="name">Deskripsi <code>*</code></label>
                                         <div id="editor"></div>
                                         <textarea name="desc" id="content-editor" style="display: none;"></textarea>
                                         @error('stock')
@@ -112,6 +144,95 @@
     <script defer src="https://cdn.bootcdn.net/ajax/libs/quill/1.3.7/quill.min.js"></script>
     <script defer src="https://unpkg.com/quill-resize-image@1.0.5/dist/quill-resize-image.min.js"></script>
     <script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#category').on('change', function () {
+            let selectedOption = $(this).find(':selected');
+            let categoryName = selectedOption.data('name');
+
+            if (categoryName === 'Paket Reseller') {
+                $('#category_reseller').removeClass('d-none');
+                $('#price_container').addClass('d-none');
+            } else {
+                $('#category_reseller').addClass('d-none');
+                $('#price_container').removeClass('d-none');
+            }
+        });
+
+        // Jika halaman reload, pastikan kategori tetap sesuai
+        $('#category').trigger('change');
+    // Fungsi format Rupiah
+    function formatRupiah(angka) {
+        let numberString = angka.replace(/[^,\d]/g, '').toString(),
+            split = numberString.split('.'),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        if (ribuan) {
+            let separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+        return 'Rp ' + rupiah;
+    }
+
+    // Fungsi untuk menangani input harga
+    function handlePriceInput(input) {
+        let price = input.val();
+        price = price.replace(/[^0-9]/g, ''); // Hanya angka
+        if (price) {
+            price = formatRupiah(price);
+        }
+        input.val(price);
+    }
+
+    // Inisialisasi semua input harga yang sudah ada saat halaman dimuat
+    $('.price-input').each(function () {
+        handlePriceInput($(this));
+    });
+
+    // Event listener untuk input harga yang sudah ada dan yang baru ditambahkan
+    $('#table_packet').on('input', '.price-input', function () {
+        handlePriceInput($(this));
+    });
+
+    // Fungsi untuk menambahkan baris baru ke tabel
+    $('#table_packet').on('click', '.btn-add', function () {
+        let newRow = `<tr>
+            <td>
+                <input type="text" class="form-control" name="name_packet[]">
+            </td>
+            <td style="width: 20%;">
+                <input type="number" class="form-control" name="jumlah[]" placeholder="Jumlah Paket">
+            </td>
+            <td style="width: 20%;">
+                <input type="text" class="form-control price-input" name="price_reseller[]" placeholder="Harga Paket">
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm btn-delete">-</button>
+                <button type="button" class="btn btn-primary btn-sm btn-add">+</button>
+            </td>
+        </tr>`;
+
+        $('#table_packet').append(newRow);
+
+        // Inisialisasi input harga yang baru ditambahkan
+        $('#table_packet tr:last .price-input').each(function () {
+            handlePriceInput($(this));
+        });
+    });
+
+    // Event delegation untuk hapus baris
+    $('#table_packet').on('click', '.btn-delete', function () {
+        $(this).closest('tr').remove();
+    });
+});
+
+</script>
+
+    <script type="text/javascript">
 
         function previewImage(event) {
             const output = document.getElementById('output');
@@ -136,7 +257,7 @@
         $(document).ready(function () {
             $('.select2').select2();
 
-            $('#price').on('input', function () {
+            $('#price, #price_reseller').on('input', function () {
                 let price = $(this).val();
                 price = price.replace(/[^0-9.]/g, '');
                 price = formatRupiah(price);

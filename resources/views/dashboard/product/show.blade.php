@@ -20,7 +20,7 @@
 
                                 <div class="col-md-12 mt-2">
                                     <h5 class="mb-2">Kategori</h5>
-                                    <p>{{ $product->category ? $product->category->name : 'Tidak ada kategori' }}</p>
+                                    <p>{{ optional($product->category)->name ?? 'Tidak ada kategori' }}</p>
                                 </div>
 
                                 <div class="col-md-12 mt-2">
@@ -29,8 +29,46 @@
                                 </div>
 
                                 <div class="col-md-12 mt-2">
+                                    <h5 class="mb-2">Harga</h5>
+                                    <p>{{ 'Rp. ' . number_format((float) ($product->price ?? 0), 0, ',', '.') }}</p>
+                                </div>
+
+                                @if(optional($product->category)->name === 'Paket Reseller')
+                                <div class="col-md-12 mt-2" id="category_reseller">
+                                    <table class="table table-bordered" id="table_packet">
+                                        <tr>
+                                            <th class="w-25">Nama Paket</th>
+                                            <th class="w-25">Jumlah</th>
+                                            <th class="w-25">Harga</th>
+                                            <th class="w-25">Aksi</th>
+                                        </tr>
+
+                                        @foreach($resellerPackages as $index => $package)
+                                        <tr>
+                                            <td>
+                                                <input type="text" class="form-control" name="name_packet[]" value="{{ $package->name }}">
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <input type="number" class="form-control" name="jumlah[]" value="{{ $package->jumlah }}">
+                                            </td>
+                                            <td style="width: 20%;">
+                                                <input type="text" class="form-control price-input" name="price_reseller[]" value="{{ number_format($package->price_reseller, 0, ',', '.') }}">
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-danger btn-sm btn-delete">-</button>
+                                                @if($loop->last)
+                                                    <button type="button" class="btn btn-primary btn-sm btn-add">+</button>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </table>
+                                </div>
+                                @endif
+
+                                <div class="col-md-12 mt-2">
                                     <h5 class="mb-2">Gambar</h5>
-                                    @if($product->foto)
+                                    @if($product->foto && file_exists(public_path('storage/product/' . $product->foto)))
                                         <img src="{{ asset('storage/product/' . $product->foto) }}" class="img-fluid" style="border-radius: 10px; max-width: 100%; height: auto;">
                                     @else
                                         <p>Tidak ada gambar</p>

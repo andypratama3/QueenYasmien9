@@ -27,17 +27,18 @@
                 <i class='bx bx-user-circle'></i>
             </a>
           </li>
+          @auth
           <li>
-            <a href="#" class="rounded-circle bg-light p-2 mx-1">
-              <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#heart"></use></svg>
+            <a href="{{ route('pesanan.index') }}" class="rounded-circle bg-light p-2 mx-1">
+                <i class='bx bxs-package'></i>
             </a>
           </li>
-          @auth
-          <li class="d-lg-none">
-              <a href="#" class="rounded-circle bg-light p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
-                  <i class='bx bxs-cart' ></i>
-                </a>
-            </li>
+
+          <li>
+            <a href="#" class="rounded-circle bg-light p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
+                <i class='bx bxs-cart' ></i>
+            </a>
+          </li>
             @endauth
         </ul>
 
@@ -83,7 +84,7 @@
                         <a href="{{ Request::routeIs('home') ? '#product' : url('/#product') }}" class="nav-link">Produk</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a href="{{ Request::routeIs('home') ? '#men' : url('/#men') }}" class="nav-link">Tentang</a>
+                        <a href="{{ Request::routeIs('home') ? '#tentang' : url('/#tentang') }}" class="nav-link">Tentang</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('catalog.index') }}" class="nav-link {{ Route::currentRouteName() == 'catalog.index' ? 'active' : '' }}">Katalog</a>
@@ -91,6 +92,11 @@
                     <li class="nav-item">
                         <a href="{{ Request::routeIs('home') ? '#blog' : url('/#blog') }}" class="nav-link">Testimonial</a>
                     </li>
+                    @auth
+                    <li class="nav-item">
+                        <a href="{{ route('pesanan.index') }}" class="nav-link {{ Route::currentRouteName() == 'pesanan.index' ? 'active' : '' }}">Pesanan</a>
+                    </li>
+                    @endauth
                 </ul>
             </div>
 

@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_checkout', function (Blueprint $table) {
+        Schema::create('products_reseller', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('name');
             $table->foreignUuId('product_id')->references('id')->on('products');
-            $table->foreignUuId('pemesanan_id')->references('id')->on('pemesanans');
-            $table->integer('qty')->default(1);
-            $table->primary(['product_id', 'pemesanan_id']);
+            $table->integer('jumlah');
+            $table->integer('price_reseller');
+            $table->timestamps();
         });
     }
 
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_checkout');
+        Schema::dropIfExists('products_reseller');
     }
 };
