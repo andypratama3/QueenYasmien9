@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Models\Pemesanan;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class MidtransPaymentController extends Controller
 {
@@ -19,14 +20,14 @@ class MidtransPaymentController extends Controller
         try {
             $midtransResponse = $request->all();
 
-            if (isset($midtransResponse['status_code']) && in_array($midtransResponse['status_code'], ['202', '300', '401', '405'])) {
-                DB::table('error_log')->insert([
-                    'status_code' => $midtransResponse['status_code'],
-                    'error' => $midtransResponse['status_message'] ?? 'Unknown error',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
+            // if (isset($midtransResponse['status_code']) && in_array($midtransResponse['status_code'], ['202', '300', '401', '405'])) {
+            //     DB::table('error_log')->insert([
+            //         'status_code' => $midtransResponse['status_code'],
+            //         'error' => $midtransResponse['status_message'] ?? 'Unknown error',
+            //         'created_at' => now(),
+            //         'updated_at' => now(),
+            //     ]);
+            // }
 
             if (!isset($midtransResponse['order_id'])) {
                 return response()->json(['message' => 'Invalid request, order_id not found'], 400);
@@ -64,7 +65,7 @@ class MidtransPaymentController extends Controller
                 }
             }
 
-            $pesanan = Pesanan::where('order_id', $midtransResponse['order_id'])->first();
+            $pesanan = Pemesanan::where('order_id', $midtransResponse['order_id'])->first();
 
             if (!$pesanan) {
                 return response()->json(['message' => 'Pesanan Tidak Ada'], 404);
@@ -79,8 +80,11 @@ class MidtransPaymentController extends Controller
             }
 
 
-            
-            $pesanan->update($data);
+
+            $pesanan->update([
+                'status_pembayaran' => $data['transaction_status'],
+                'status_pemesanan' => 'proses',
+            ]);
 
             return response()->json(['message' => 'Payment data updated successfully'], 200);
         } catch (\Exception $e) {

@@ -18,27 +18,48 @@
       <div class="col-sm-8 col-lg-4 d-flex justify-content-end gap-5 align-items-center mt-4 mt-sm-0 justify-content-center justify-content-sm-end">
 
         <div class="support-box text-end d-none d-xl-block">
-            <span class="fs-6 text-muted">For Support?</span>
-            <a href="" class="btn btn-primary btn-sm"><i class="bi bi-whatsapp"></i>+980-34984089</a><p class="mb-0"></p>
+            <span class="fs-6 text-muted">WhatsApp</span>
+            <a href="https://wa.me/628123456789" class="btn btn-primary btn-sm"><i class="bi bi-whatsapp"></i>+628123456789</a><p class="mb-0"></p>
           </div>
-        <ul class="d-flex justify-content-end list-unstyled m-0">
-          <li>
-            <a href="#" class="rounded-circle bg-light p-2 mx-1">
-                <i class='bx bx-user-circle'></i>
-            </a>
-          </li>
-          @auth
-          <li>
-            <a href="{{ route('pesanan.index') }}" class="rounded-circle bg-light p-2 mx-1">
-                <i class='bx bxs-package'></i>
-            </a>
-          </li>
-
-          <li>
-            <a href="#" class="rounded-circle bg-light p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
-                <i class='bx bxs-cart' ></i>
-            </a>
-          </li>
+          <ul class="d-flex align-items-center list-unstyled m-0 gap-2">
+            <!-- User Dropdown -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle rounded-circle bg-light p-2 mx-1 d-flex align-items-center justify-content-center" 
+                   href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" 
+                   style="width: 40px; height: 40px;">
+                    <i class='bx bx-user-circle'></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    @auth
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="btn btn-primary dropdown-item">Logout</button>
+                            </form>
+                        </li>
+                    @else
+                        <li><a class="dropdown-item" href="{{ route('login') }}">Login</a></li>
+                        <li><a class="dropdown-item" href="{{ route('register') }}">Register</a></li>
+                    @endauth
+                </ul>
+            </li>
+    
+            @auth
+            <!-- Pesanan -->
+            <li>
+                <a href="{{ route('pesanan.index') }}" 
+                   class="rounded-circle bg-light p-2 mx-1 d-flex align-items-center justify-content-center" 
+                   style="width: 40px; height: 40px;">
+                    <i class='bx bxs-package'></i>
+                </a>
+            </li>
+    
+            <!-- Cart (Tidak Diubah) -->
+            <li>
+                <a href="#" class="rounded-circle bg-light p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
+                    <i class='bx bxs-cart' ></i>
+                </a>
+            </li>
             @endauth
         </ul>
 

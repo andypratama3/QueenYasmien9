@@ -34,7 +34,6 @@ class Pemesanan extends Model
         return $this->belongsTo(ProductReseller::class, 'products_reseller_id');
     }
 
-
     public function products()
     {
         return $this->belongsToMany(Product::class, 'product_checkout', 'pemesanan_id', 'product_id')->withPivot('qty');

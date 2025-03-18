@@ -11,9 +11,11 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\ProductController;
+use App\Http\Controllers\Dashboard\VisitorController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\PemesananController;
+use App\Http\Controllers\Dashboard\ChartController as DashboardChartController;
 use App\Http\Controllers\Dashboard\CatalogController as DashboardCatalogController;
 
 
@@ -35,7 +37,8 @@ Route::group(['prefix' => '/', 'middleware' => 'auth','verified'], function () {
     Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
 
 });
-Route::group(['prefix' => 'dashboard', 'middleware' => 'auth','verified'], function () {
+Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified', 'role_custom:admin|reseller|owner']], function () {
+
 // Route::group(['prefix' => 'dashboard'], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
 
@@ -44,11 +47,14 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth','verified'], funct
     Route::get('products/datas', [ProductController::class, 'data_table'])->name('dashboard.products.data_table');
     Route::post('products/upload/image', [ProductController::class, 'uploadImage'])->name('dashboard.post.upload.image');
 
+    Route::get('/visitors/data', [VisitorController::class, 'getVisitorData'])->name('visitors.data');
+    Route::get('/gross_amount/data', [DashboardChartController::class, 'grossAmount'])->name('grossAmount.data');
 
     Route::resource('catalog', DashboardCatalogController::class, ['names' => 'dashboard.catalog']);
     Route::post('catalogs/upload/image', [DashboardCatalogController::class, 'uploadImage'])->name('dashboard.catalog.upload.image');
     Route::get('catalos/datas', [DashboardCatalogController::class, 'data_table'])->name('dashboard.catalog.data_table');
     Route::resource('pemesanan', PemesananController::class, ['names' => 'dashboard.pesanan']);
+    Route::get('pemesanas/datas', [PemesananController::class, 'data_table'])->name('dashboard.pemesanan.data_table');
 
     Route::group(['prefix' => 'settings'], function () {
         Route::resource('roles', RoleController::class, ['names' => 'dashboard.settings.roles']);

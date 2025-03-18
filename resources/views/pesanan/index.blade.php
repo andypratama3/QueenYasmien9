@@ -75,6 +75,14 @@
             background-color: #e74c3c;
             color: white;
         }
+        .status-pengiriman {
+            background-color: #0062da;
+            color: white;
+        }
+        .status-proses {
+            background-color: #daa400;
+            color: white;
+        }
     </style>
 @endpush
 
@@ -109,8 +117,9 @@
 
                                         <div class="details">
                                             <h2>{{ $product->name }}</h2>
+                                            <p>{{ $product->product_reseller->first()->name ?? '-' }}</p>
                                             <p>Jumlah: {{ $product->pivot->qty ?? 1 }}</p>
-                                            <p>Harga Satuan: Rp {{ number_format($product->price, 0, ',', '.') }}</p>
+                                            <p>Harga Satuan: Rp {{ number_format($product->product_reseller->where('id', $pesanan->products_reseller_id)->first()->price_reseller ?? $product->price, 0, ',', '.') }}</p>
                                         </div>
 
                                         <p><strong>Total: Rp
@@ -127,21 +136,39 @@
                                     <p class="text-center">Pesanan ini belum memiliki produk.</p>
                                 @endforelse
 
-                                <div>
+                                <div class="status-container">
                                     <p><strong>Status Pesanan:</strong>
-                                        <span class="status-badge {{ strtolower($pesanan->status_pemesanan) == 'pending' ? 'status-pending' : (strtolower($pesanan->status_pemesanan) == 'success' ? 'status-success' : 'status-failed') }}">
+                                        @php
+                                            $statusPemesananClass = match(strtolower($pesanan->status_pemesanan)) {
+                                                'pending' => 'status-pending',
+                                                'selesai' => 'status-success',
+                                                'proses' => 'status-proses',
+                                                'pengiriman', 'status-pengiriman', 
+                                                'batal' => 'status-failed',
+                                                default => 'status-default',
+                                            };
+                                        @endphp
+                                        <span class="status-badge {{ $statusPemesananClass }}">
                                             {{ ucwords($pesanan->status_pemesanan) }}
                                         </span>
                                     </p>
-
+                                
                                     <p><strong>Status Pembayaran:</strong>
-                                        <span class="status-badge {{ strtolower($pesanan->status_pembayaran) == 'pending' ? 'status-pending' : (strtolower($pesanan->status_pembayaran) == 'paid' ? 'status-success' : 'status-failed') }}">
+                                        @php
+                                            $statusPembayaranClass = match(true) {
+                                                in_array(strtolower($pesanan->status_pembayaran), ['settlement', 'capture']) => 'status-success',
+                                                in_array(strtolower($pesanan->status_pembayaran), ['expired', 'cancel', 'deny']) => 'status-failed',
+                                                strtolower($pesanan->status_pembayaran) === 'pending' => 'status-pending',
+                                                default => 'status-default',
+                                            };
+                                        @endphp
+                                        <span class="status-badge {{ $statusPembayaranClass }}">
                                             {{ ucwords($pesanan->status_pembayaran) }}
                                         </span>
                                     </p>
-
-
                                 </div>
+                                
+                                
                             </div>
                         @empty
                             <p class="text-center">Belum ada pesanan.</p>

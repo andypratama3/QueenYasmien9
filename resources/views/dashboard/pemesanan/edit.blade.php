@@ -1,13 +1,13 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Edit Produk')
+@section('title', 'Edit Pesanan')
 
 @push('css')
     <link href="https://cdn.bootcdn.net/ajax/libs/quill/1.3.7/quill.snow.min.css" rel="stylesheet" />
 @endpush
 
 @section('content')
-<h1 class="h3 mb-3"><strong>Edit </strong> Produk</h1>
+<h1 class="h3 mb-3"><strong>Edit </strong> Pesanan</h1>
 
 <div class="row">
     <div class="col-xl-12 col-xxl-8 d-flex">
@@ -16,68 +16,118 @@
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-body">
-                            <form action="{{ route('dashboard.product.update', $product->slug) }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('dashboard.pesanan.update', $pemesanan->slug) }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <label class="form-label" for="name">Nama</label>
                                         <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                               id="name" name="name" value="{{ old('name', $product->name) }}">
+                                               id="name" name="name" value="{{ old('name', $pemesanan->user->name) }}" readonly>
+                                        @error('name')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="name">Order ID</label>
+                                        <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                               id="name" name="name" value="{{ old('name', $pemesanan->order_id) }}" readonly>
                                         @error('name')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
 
-                                    <div class="col-md-12 mt-2">
-                                        <label class="form-label" for="category">Kategori Produk</label>
-                                        <select name="category_id" id="category" class="form-control">
-                                            <option value="" selected>Pilih Kategori</option>
-                                            @foreach ($categorys as $category)
-                                                <option value="{{ $category->id }}"
-                                                    {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
-                                                    {{ $category->name }}
-                                                </option>
-                                            @endforeach
+
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="gross_amount">Total Pembayaran</label>
+                                        <input type="text" class="form-control @error('gross_amount') is-invalid @enderror"
+                                               id="gross_amount" name="gross_amount" value="{{ old('gross_amount', 'Rp. ' . number_format((float) ($pemesanan->gross_amount ?? 0), 0, ',', '.')) }}" readonly>
+                                        @error('gross_amount')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-6 mt-2">
+                                        <label class="form-label" for="pengiriman">Pengiriman</label>
+                                        <input type="text" class="form-control @error('pengiriman') is-invalid @enderror"
+                                               id="pengiriman" name="pengiriman" value="{{ old('pengiriman', $pemesanan->pengiriman) }}" readonly>
+                                        @error('pengiriman')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-md-6 mt-2">
+                                        <label class="form-label" for="pengiriman">Alamat</label>
+                                        <textarea class="form-control @error('alamat') is-invalid @enderror"
+                                                  id="alamat" name="alamat" readonly>{{ old('alamat', $pemesanan->alamat) }}</textarea>
+                                        @error('alamat')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-md-6 mt-2">
+                                        <label class="form-label" for="status_pemesanan">Status Pemesanan</label>
+                                        <select class="form-control @error('status_pemesanan') is-invalid @enderror"
+                                                id="status_pemesanan" name="status_pemesanan">
+                                            <option value="pending" {{ $pemesanan->status_pemesanan == 'pending' ? 'selected' : '' }}>Pending</option>
+                                            <option value="proses" {{ $pemesanan->status_pemesanan == 'proses' ? 'selected' : '' }}>Proses</option>
+                                            <option value="pengiriman" {{ $pemesanan->status_pemesanan == 'pengiriman' ? 'selected' : '' }}>Pengiriman</option>
+                                            <option value="selesai" {{ $pemesanan->status_pemesanan == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                                            <option value="batal" {{ $pemesanan->status_pemesanan == 'batal' ? 'selected' : '' }}>Batal</option>
                                         </select>
+                                        @error('status_pemesanan')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
-
-                                    <div class="col-md-12 mt-2">
-                                        <label class="form-label" for="stock">Stok</label>
-                                        <input type="number" class="form-control @error('stock') is-invalid @enderror"
-                                               id="stock" name="stock" value="{{ old('stock', $product->stock) }}">
-                                        @error('stock')
+                                    <div class="col-md-6 mt-2">
+                                        <label class="form-label" for="status_pembayaran">Status Pembayaran</label>
+                                        <select class="form-control @error('status_pembayaran') is-invalid @enderror" disabled
+                                                id="status_pembayaran" name="status_pembayaran">
+                                            <option value="pending" {{ $pemesanan->status_pembayaran == 'pending' ? 'selected' : '' }}>Pending</option>
+                                            <option value="capture" {{ in_array($pemesanan->status_pembayaran, ['capture', 'settlement']) ? 'selected' : '' }}>Selesai</option>
+                                            <option value="batal" {{ in_array($pemesanan->status_pembayaran, ['batal', 'expire', 'cancel', 'deny']) ? 'selected' : '' }}>Batal</option>
+                                        </select>
+                                        @error('status_pembayaran')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
 
-                                    <div class="col-md-12 mt-2">
-                                        <label for="foto" class="form-label">Gambar</label>
-                                        <input type="file" class="form-control @error('foto') is-invalid @enderror"
-                                               id="foto" name="foto" accept="image/*" onchange="previewImage(event)">
-                                        @error('foto')
+                                    <div class="col-md-6 mt-2">
+                                        <label class="form-label" for="created_at">Tanggal Pemesanan</label>
+                                        <input type="text" class="form-control @error('created_at') is-invalid @enderror"
+                                                id="created_at" name="created_at" value="{{ old('created_at', \Carbon\Carbon::parse($pemesanan->created_at)->format('d F Y')) }}" readonly>
+                                        @error('created_at')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                        <div class="col-md-12 mt-2">
-                                            <h6 class="text-center">Preview Gambar</h6>
-                                            <img src="{{ $product->foto ? asset('storage/product/' . $product->foto) : '' }}"
-                                                 id="output" class="img-preview img-fluid mb-3"
-                                                 style="border-radius: 10px; max-width: 100%; height: auto;
-                                                        display: {{ $product->foto ? 'block' : 'none' }};">
-                                        </div>
                                     </div>
 
-                                    <div class="col-md-12 mt-2 mb-6">
-                                        <label class="form-label" for="desc">Deskripsi</label>
-                                        <div id="editor">{!! old('desc', $product->desc) !!}</div>
-                                        <textarea name="desc" id="content-editor" style="display: none;">{{ old('desc', $product->desc) }}</textarea>
-                                        @error('desc')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
+                                    <div class="col-md-12 mt-3">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <td>Nama Produk</td>
+                                                    <td>Paket Reseller</td>
+                                                    <td>Jumlah</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse($pemesanan->products as $product)
+                                                <tr>
+                                                    <td>{{ $product->name }}</td>
+                                                    <td>{{ $product->product_reseller->first()->name ?? '-' }}</td>
+                                                    <td>{{ $product->pivot->qty ?? 1 }}</td>
+                                                </tr>
+                                                @empty
+                                                    <tr ></tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+
                                     </div>
+
+
 
                                     <div class="col-md-12 mt-6">
-                                        <a href="{{ route('dashboard.product.index') }}" class="btn btn-sm btn-danger">Kembali</a>
+                                        <a href="{{ route('dashboard.pesanan.index') }}" class="btn btn-sm btn-danger">Kembali</a>
                                         <button type="submit" class="btn-sm btn btn-primary">Simpan Perubahan</button>
                                     </div>
                                 </div>
