@@ -35,6 +35,7 @@ Route::group(['prefix' => '/', 'middleware' => 'auth','verified'], function () {
 
     Route::get('pesanan', [PesananController::class, 'index'])->name('pesanan.index');
     Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+    Route::post('/pay', [PesananController::class, 'pay'])->name('pesanan.pay');
 
 });
 Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified', 'role_custom:admin|reseller|owner']], function () {

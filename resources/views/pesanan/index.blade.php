@@ -97,7 +97,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row"  id="pesanan-list">
             <div class="card">
                 <div class="card-body">
                     <h4>Daftar Pesanan
@@ -128,9 +128,6 @@
                                                 * ($product->pivot->qty ?? 1), 0, ',', '.'
                                             ) }}
                                         </strong></p>
-
-
-
                                     </div>
                                 @empty
                                     <p class="text-center">Pesanan ini belum memiliki produk.</p>
@@ -143,7 +140,7 @@
                                                 'pending' => 'status-pending',
                                                 'selesai' => 'status-success',
                                                 'proses' => 'status-proses',
-                                                'pengiriman', 'status-pengiriman', 
+                                                'pengiriman', 'status-pengiriman',
                                                 'batal' => 'status-failed',
                                                 default => 'status-default',
                                             };
@@ -152,23 +149,31 @@
                                             {{ ucwords($pesanan->status_pemesanan) }}
                                         </span>
                                     </p>
-                                
+
                                     <p><strong>Status Pembayaran:</strong>
                                         @php
-                                            $statusPembayaranClass = match(true) {
+                                          $statusPembayaranClass = match (true) {
                                                 in_array(strtolower($pesanan->status_pembayaran), ['settlement', 'capture']) => 'status-success',
                                                 in_array(strtolower($pesanan->status_pembayaran), ['expired', 'cancel', 'deny']) => 'status-failed',
-                                                strtolower($pesanan->status_pembayaran) === 'pending' => 'status-pending',
+                                                strtolower($pesanan->status_pembayaran ?? '') === 'pending' => 'status-pending',
                                                 default => 'status-default',
                                             };
+
                                         @endphp
                                         <span class="status-badge {{ $statusPembayaranClass }}">
                                             {{ ucwords($pesanan->status_pembayaran) }}
                                         </span>
+                                            {{-- button pay  --}}
+                                            @if($pesanan->status_pembayaran === 'expire' || $pesanan->status_pembayaran === 'cancel' || $pesanan->status_pembayaran === 'deny' || $pesanan->status_pembayaran === 'pending')
+                                                <button class="btn btn-primary btn-pay float-end" data-id="{{ $pesanan->id }}">Bayar</button>
+                                            @endif
+
                                     </p>
                                 </div>
-                                
-                                
+
+
+                            </div>
+
                             </div>
                         @empty
                             <p class="text-center">Belum ada pesanan.</p>
@@ -179,4 +184,68 @@
         </div>
     </div>
 </section>
+@push('js_user')
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT') }}"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#pesanan-list').on('click', '.btn-pay',function () {
+                let id = $(this).data('id');
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('pesanan.pay') }}",
+                    data: { id: id },
+                    dataType: "json",
+                    success: function (response) {
+                        let snapToken = response.snap_token;
+                            snap.pay(snapToken, {
+                            onSuccess: function (result) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil',
+                                    text: 'Pembayaran Berhasil',
+                                    confirmButtonColor: '#f7a422',
+                                    confirmButtonText: 'OK',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = '{{ route("pesanan.index") }}';
+                                    }
+                                });
+
+                            },
+                            onPending: function (result) {
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: 'Pembayaran Sedang Dalam Proses',
+                                    text: 'Silakan lakukan pembayaran pada menu pembayaran.',
+                            }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = '{{ route("pesanan.index") }}';
+                                    }
+                                });
+                            },
+                            onError: function (result) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Pembayaran Gagal. Silakan coba lagi.',
+                            }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = '{{ route("pesanan.index") }}';
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+
+            });
+        });
+    </script>
+@endpush
 @endsection
