@@ -225,7 +225,7 @@
             let subtotal = row.querySelector('.subtotal').textContent.replace(/[^\d]/g, '');
             total += parseInt(subtotal) || 0;
         });
-        grandTotal.textContent = "Rp. " + total.toLocaleString('id-ID');
+        grandTotal.textContent = total.toLocaleString('id-ID');
     }
 
     selectAllButton.addEventListener('click', function () {
