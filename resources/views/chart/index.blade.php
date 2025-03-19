@@ -147,7 +147,7 @@
 
                             <div class="col-md-12 mt-2 m-2">
                                 <label for="pengiriman" class="form-label">Jenis Pengiriman <code>*</code></label>
-                                <input type="text" class="form-control" id="pengiriman" name="pengiriman" value="{{ old('pengiriman') }}">
+                                <input type="text" class="form-control" id="pengiriman" name="pengiriman" required value="{{ old('pengiriman') }}">
                                 <p>
                                     Pada Pengiriman
                                 </p>
@@ -155,7 +155,7 @@
 
                             <div class="col-md-12 mt-2 m-2">
                                 <label for="alamat" class="form-label">Alamat <code>*</code></label>
-                                <textarea name="alamat" id="alamat" cols="10" rows="10" class="form-control"></textarea>
+                                <textarea name="alamat" id="alamat" cols="10" rows="10" required class="form-control"></textarea>
                             </div>
                             <div class="col-md-12 mt-4 mb-3">
                                 <div class="post-item card border-0 shadow-sm p-3">
@@ -213,10 +213,10 @@
     });
 
     document.addEventListener('DOMContentLoaded', function () {
-    let selectAllCheckbox = document.getElementById('select-all');
-    let selectAllButton = document.getElementById('btn-select-all');
-    let checkboxes = document.querySelectorAll('.select-item');
-    let grandTotal = document.getElementById('grand-total');
+        let selectAllCheckbox = document.getElementById('select-all');
+        let selectAllButton = document.getElementById('btn-select-all');
+        let checkboxes = document.querySelectorAll('.select-item');
+        let grandTotal = document.getElementById('grand-total');
 
     function updateGrandTotal() {
         let total = 0;
@@ -316,63 +316,67 @@
     });
 
     document.getElementById('process-selected').addEventListener('click', function () {
-        let selectedItems = [];
-        let selected_reseller = []
-        let qtyItems = [];
+    let selectedItems = [];
+    let selected_reseller = [];
+    let qtyItems = [];
+    let pengiriman = document.getElementById('pengiriman')?.value || '';
+    let alamat = document.getElementById('alamat')?.value || '';
 
-        let pengiriman = document.getElementById('pengiriman').value;
-        let alamat = document.getElementById('alamat').value;
+    let checkboxes = document.querySelectorAll('.select-item:checked');
 
+    checkboxes.forEach(checkbox => {
+        let row = checkbox.closest('.product-item');
+        let resellerPackage = row.querySelector('.reseller-select');
+        let quantity = row.querySelector('.qty-input');
 
-        checkboxes.forEach(checkbox => {
-            if (checkbox.checked) {
-                let row = checkbox.closest('.product-item');
-
-                let resellerPackage = row.querySelector('.reseller-select');
-                let quantity = row.querySelector('.qty-input');
-                if (quantity && !quantity.value) {
-                    quantity.value = 1;
-                }
-
-
-                if(resellerPackage && resellerPackage.value) {
-                    selected_reseller.push(resellerPackage.value);
-                }
-                selectedItems.push(checkbox.value);
-                qtyItems.push(quantity);
-            }
-        });
-
-
-
-
-        if (selectedItems.length === 0) {
-            Swal.fire({
-                icon: 'warning',
-                text: "Minimal 1 Produk",
-                icon: "error"
-            });
-            return;
+        if (quantity && !quantity.value) {
+            quantity.value = 1;
         }
 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
+        if (resellerPackage && resellerPackage.value) {
+            selected_reseller.push(resellerPackage.value);
+        }
+
+        selectedItems.push(checkbox.value);
+        qtyItems.push(quantity.value); // Memastikan hanya nilai yang dikirim
+    });
+
+    if (selectedItems.length === 0) {
+        Swal.fire({
+            icon: 'warning',
+            text: "Minimal 1 Produk",
+            icon: "error"
         });
-        $.ajax({
-            url: "{{ route('checkout') }}",
-            type: 'POST',
-            data: {
-                items: selectedItems,
-                selected_reseller: selected_reseller,
-                qty: qtyItems,
-                pengiriman: pengiriman,
-                alamat: alamat
-            },
-            success: function (response) {
-                let snapToken = response.snap_token;
-                snap.pay(snapToken, {
+        return;
+    }
+    if (!alamat || !pengiriman) {
+        Swal.fire({
+            icon: 'warning',
+            text: 'Alamat dan Pengiriman harus diisi!',
+            icon: "error"
+        });
+        return;
+    }
+
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+        url: "{{ route('checkout') }}",
+        type: 'POST',
+        data: {
+            items: selectedItems,
+            selected_reseller: selected_reseller,
+            qty: qtyItems,
+            pengiriman: pengiriman,
+            alamat: alamat
+        },
+        success: function (response) {
+            let snapToken = response.snap_token;
+            snap.pay(snapToken, {
                 onSuccess: function (result) {
                     Swal.fire({
                         icon: 'success',
@@ -385,14 +389,13 @@
                             window.location.href = '{{ route("pesanan.index") }}';
                         }
                     });
-
                 },
                 onPending: function (result) {
                     Swal.fire({
                         icon: 'info',
                         title: 'Pembayaran Sedang Dalam Proses',
                         text: 'Silakan lakukan pembayaran pada menu pembayaran.',
-                   }).then((result) => {
+                    }).then((result) => {
                         if (result.isConfirmed) {
                             window.location.href = '{{ route("pesanan.index") }}';
                         }
@@ -403,19 +406,21 @@
                         icon: 'error',
                         title: 'Oops...',
                         text: 'Pembayaran Gagal. Silakan coba lagi.',
-                   }).then((result) => {
+                    }).then((result) => {
                         if (result.isConfirmed) {
                             window.location.href = '{{ route("pesanan.index") }}';
                         }
                     });
                 }
             });
-            },
-            error: function (xhr, status, error) {
-                console.log(error);
-            }
-        });
+        },
+        error: function (xhr, status, error) {
+            console.log(error);
+
+        }
     });
+});
+
 });
 
 
