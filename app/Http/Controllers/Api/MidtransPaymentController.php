@@ -72,7 +72,7 @@ class MidtransPaymentController extends Controller
             }
 
             if (in_array($data['transaction_status'], ['settlement', 'capture'])) {
-                $data['transaction_status'] = 'settlement';
+                $data['transaction_status'] = 'selesai';
             }
 
             if (in_array($pesanan->transaction_status, ['expire', 'cancel'])) {
