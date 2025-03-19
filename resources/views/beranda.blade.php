@@ -19,7 +19,7 @@
                                 <div class="swiper-slide">
                                     <div class="row banner-content p-5">
                                         <div class="col-md-12">
-                                            <div class="categories my-3">Queen Yasmien</div>
+                                            <div class="categories my-3">Queen Yasmien9</div>
                                             <h5 class="fw-bold">Program Reseller</h5>
                                             <p class="text-black">
                                                 <strong>PAKET SKINCARE LENGKAP</strong>
@@ -291,46 +291,35 @@
 
   <section class="py-5">
     <div class="container-fluid">
-
-      <div class="bg-secondary py-5 my-5 rounded-5" style="background: url('images/bg-leaves-img-pattern.png') no-repeat;">
-        <div class="container my-5">
-          <div class="row">
-            <div class="col-md-6 p-5">
-              <div class="section-header">
-                <h2 class="section-title display-4">Get <span class="text-primary">25% Discount</span> on your first purchase</h2>
-              </div>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dictumst amet, metus, sit massa posuere maecenas. At tellus ut nunc amet vel egestas.</p>
+        <div class="bg-secondary py-5 my-5 rounded-5" style="background: url('images/bg-skincare-pattern.png') no-repeat;">
+            <div class="container my-5">
+                <div class="row">
+                    <div class="col-md-6 p-5">
+                        <div class="section-header">
+                            <h2 class="section-title display-4">
+                                <span class="text-primary">Gabung sebagai Reseller</span> & Mulai Bisnis Skincare Anda!
+                            </h2>
+                        </div>
+                        <p>Jadilah reseller Queen Yasmien9 dan dapatkan harga spesial untuk Pembelian Produk Reseller Anda! Nikmati keuntungan eksklusif, dengan produk skincare berkualitas tinggi.</p>
+                        <ul>
+                            <li>🛍️ Harga spesial & keuntungan reseller</li>
+                            <li>📦 Produk berkualitas dengan stok terjamin</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 p-5 d-flex flex-column justify-content-center text-center">
+                        <div class="form-group">
+                            <h2 class="fw-bold">Pesan Produk Reseller Sekarang!</h2>
+                            <a href="#product" class="btn btn-dark btn-lg mt-3">Beli Paket Reseller</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6 p-5">
-              <form>
-                <div class="mb-3">
-                  <label for="name" class="form-label">Name</label>
-                  <input type="text"
-                    class="form-control form-control-lg" name="name" id="name" placeholder="Name">
-                </div>
-                <div class="mb-3">
-                  <label for="" class="form-label">Email</label>
-                  <input type="email" class="form-control form-control-lg" name="email" id="email" placeholder="abc@mail.com">
-                </div>
-                <div class="form-check form-check-inline mb-3">
-                  <label class="form-check-label" for="subscribe">
-                  <input class="form-check-input" type="checkbox" id="subscribe" value="subscribe">
-                  Subscribe to the newsletter</label>
-                </div>
-                <div class="d-grid gap-2">
-                  <button type="submit" class="btn btn-dark btn-lg">Submit</button>
-                </div>
-              </form>
-
-            </div>
-
-          </div>
-
         </div>
-      </div>
-
     </div>
-  </section>
+</section>
+
+
+
 
   <section class="py-5 my-5">
     <div class="container-fluid">
@@ -341,8 +330,8 @@
                         <img src="images/phone.png" alt="website preview" class="image-float img-fluid">
                     </div>
                     <div class="col-md-8">
-                        <h2 class="my-5">Belanja Lebih Mudah di Website Queen Yasmien</h2>
-                        <p>Nikmati kemudahan berbelanja produk skincare premium Queen Yasmien langsung dari website kami. Temukan berbagai produk berkualitas, promo menarik, serta informasi lengkap mengenai perawatan kulit hanya dengan beberapa klik.</p>
+                        <h2 class="my-5">Belanja Lebih Mudah di Website Queen Yasmien9</h2>
+                        <p>Nikmati kemudahan berbelanja produk skincare premium Queen Yasmien9 langsung dari website kami. Temukan berbagai produk berkualitas, promo menarik, serta informasi lengkap mengenai perawatan kulit hanya dengan beberapa klik.</p>
                         <a href="{{ url('/') }}" class="btn btn-primary mt-3">Kunjungi Sekarang</a>
                     </div>
                 </div>
