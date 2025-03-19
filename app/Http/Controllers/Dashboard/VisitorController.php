@@ -17,7 +17,7 @@ class VisitorController extends Controller
 
         if ($range === 'day') {
             $visitors = Visitor::whereDate('created_at', $date->format('Y-m-d'))->count();
-            \Log::info('Day data:', ['visitors' => $visitors]);
+            // \Log::info('Day data:', ['visitors' => $visitors]);
         } elseif ($range === 'month') {
             $visitors = Visitor::selectRaw('DAY(created_at) as day')
                 ->selectRaw('COUNT(*) as total')
@@ -26,7 +26,7 @@ class VisitorController extends Controller
                 ->groupBy('day')
                 ->orderBy('day')
                 ->get();
-            \Log::info('Month data:', $visitors->toArray());
+            // \Log::info('Month data:', $visitors->toArray());
         } elseif ($range === 'year') {
             $visitors = Visitor::selectRaw('MONTH(created_at) as month')
                 ->selectRaw('COUNT(*) as total')
@@ -34,7 +34,7 @@ class VisitorController extends Controller
                 ->groupBy('month')
                 ->orderBy('month')
                 ->get();
-            \Log::info('Year data:', $visitors->toArray());
+            // \Log::info('Year data:', $visitors->toArray());
         }
 
         return response()->json($visitors);
