@@ -327,7 +327,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-4">
-                        <img src="images/phone.png" alt="website preview" class="image-float img-fluid">
+                        <img src="{{ asset('assets/images/phone1.png') }}" alt="website preview" class="image-float img-fluid">
                     </div>
                     <div class="col-md-8">
                         <h2 class="my-5">Belanja Lebih Mudah di Website Queen Yasmien9</h2>
