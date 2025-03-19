@@ -57,6 +57,7 @@
 
 										<div class="d-grid gap-2 mt-3">
 											<button class="btn btn-primary" type="submit">Login</button>
+                                            <a href="{{ route('register') }}" class="btn btn-primary">Daftar Akun</a>
 										</div>
 									</form>
 								</div>

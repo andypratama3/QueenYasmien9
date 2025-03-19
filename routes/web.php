@@ -4,6 +4,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\PesananController;
@@ -27,8 +28,8 @@ use App\Http\Controllers\Dashboard\CatalogController as DashboardCatalogControll
 
 Route::get('/',[HomeController::class, 'index'])->name('home');
 
-Route::resource('catalog', CatalogController::class, ['names' => 'catalog']);
-
+Route::resource('catalog', CatalogController::class, ['names' => 'catalog'])->except(['create','store','edit','update','destroy']);
+Route::get('tentang', AboutController::class)->name('about.index');
 
 Route::group(['prefix' => '/', 'middleware' => 'auth','verified'], function () {
     Route::resource('cart', ChartController::class, ['names' => 'cart']);
@@ -62,7 +63,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified', 'rol
         Route::resource('users', UserController::class, ['names' => 'dashboard.settings.users']);
 
         Route::get('user/datas', [UserController::class, 'data_table'])->name('dashboard.settings.users.data_table');
-        Route::get('rols/datas', [RoleController::class, 'data_table'])->name('dashboard.settings.roles.data_table');
+        Route::get('roles/datas', [RoleController::class, 'data_table'])->name('dashboard.settings.roles.data_table');
 
     });
 

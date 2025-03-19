@@ -39,7 +39,7 @@
         @empty
         <div class="col-md-12 mt-4 text-center">
           <h6 class="text-center">Tidak Ada Data</h6>
-          <a href="{{ route('home') }}" class="btn btn-primary text-center">Pilih Data</a>
+          <a href="{{ route('home') }}" class="btn btn-primary text-center">Kembali Ke Beranda</a>
         </div>
         @endforelse
       </div>

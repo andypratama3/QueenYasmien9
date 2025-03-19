@@ -24,8 +24,8 @@
           <ul class="d-flex align-items-center list-unstyled m-0 gap-2">
             <!-- User Dropdown -->
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle rounded-circle bg-light p-2 mx-1 d-flex align-items-center justify-content-center" 
-                   href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" 
+                <a class="nav-link dropdown-toggle rounded-circle bg-light p-2 mx-1 d-flex align-items-center justify-content-center"
+                   href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"
                    style="width: 40px; height: 40px;">
                     <i class='bx bx-user-circle'></i>
                 </a>
@@ -43,17 +43,17 @@
                     @endauth
                 </ul>
             </li>
-    
+
             @auth
             <!-- Pesanan -->
             <li>
-                <a href="{{ route('pesanan.index') }}" 
-                   class="rounded-circle bg-light p-2 mx-1 d-flex align-items-center justify-content-center" 
+                <a href="{{ route('pesanan.index') }}"
+                   class="rounded-circle bg-light p-2 mx-1 d-flex align-items-center justify-content-center"
                    style="width: 40px; height: 40px;">
                     <i class='bx bxs-package'></i>
                 </a>
             </li>
-    
+
             <!-- Cart (Tidak Diubah) -->
             <li>
                 <a href="#" class="rounded-circle bg-light p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
@@ -99,13 +99,13 @@
             <div class="offcanvas-body">
                 <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
                     <li class="nav-item active">
-                        <a href="/" class="nav-link active">Home</a>
+                        <a href="{{ route('home') }}" class="nav-link {{ Route::currentRouteName() == 'home' ? 'active' : '' }}">Home</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ Request::routeIs('home') ? '#product' : url('/#product') }}" class="nav-link">Produk</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a href="{{ Request::routeIs('home') ? '#tentang' : url('/#tentang') }}" class="nav-link">Tentang</a>
+                        <a href="{{ route('about.index') }}" class="nav-link {{ Route::currentRouteName() == 'about.index' ? 'active' : '' }}">Tentang</a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('catalog.index') }}" class="nav-link {{ Route::currentRouteName() == 'catalog.index' ? 'active' : '' }}">Katalog</a>
