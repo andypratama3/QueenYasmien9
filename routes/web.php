@@ -38,7 +38,7 @@ Route::group(['prefix' => '/', 'middleware' => 'auth','verified'], function () {
     Route::post('/pay', [PesananController::class, 'pay'])->name('pesanan.pay');
 
 });
-Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified', 'role_custom:admin|reseller|owner']], function () {
+Route::group(['prefix' => 'dashboard', 'middleware' => ['auth', 'verified', 'role_custom:admin|reseller|owner|superadmin']], function () {
 
 // Route::group(['prefix' => 'dashboard'], function () {
     Route::get('/', DashboardController::class)->name('dashboard');
