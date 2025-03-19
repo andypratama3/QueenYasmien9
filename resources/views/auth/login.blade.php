@@ -1,83 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Login</title>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="keywords" content="">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/login/style.css') }}">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="shortcut icon" href="{{ asset('assets/images/logo-small.png') }}" />
+
+
+<title>Login | Queen Yasmin </title>
+
+{{-- Box Icons --}}
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+{{-- DataTable --}}
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css">
+{{-- Styles --}}
+<link href="{{ asset('asset_dashboard/css/app.css') }}" rel="stylesheet">
+{{-- Fonts --}}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <br>
-    <div class="cont">
-        <div class="form sign-in">
-            <h2>Welcome</h2>
+	<main class="d-flex w-100">
+		<div class="container d-flex flex-column">
+			<div class="row vh-100">
+				<div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
+					<div class="d-table-cell align-middle">
 
-            <form action="{{ route('login') }}" method="POST">
-                @csrf
-                <label>
-                    <span>Email</span>
-                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required />
-                    @error('email')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
-                </label>
+						<div class="text-center mt-4">
+                            <img class="" src="{{ asset('assets/images/logo-small.png') }}" class="img-fluid" alt="" style="width: 40%;">
+							<p class="lead mt-2">
+								Selamat Datang di Halaman Login Website Queen Yasmin
+							</p>
+						</div>
 
-                <label>
-                    <span>Password</span>
-                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required />
-                    @error('password')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
-                </label>
-                <p class="forgot-pass"><a href="{{ route('password.request') }}">Forgot password?</a></p>
-                <button type="submit" class="submit">Sign In</button>
-            </form>
-        </div>
+						<div class="card">
+							<div class="card-body">
+								<div class="m-sm-3">
+									<form action="{{ route('login') }}" method="POST">
+                                        @csrf
+										<div class="mb-3">
+											<label class="form-label">Email</label>
+											<input class="form-control form-control-lg" type="email" name="email" placeholder="Enter your email" />
+										</div>
+										<div class="mb-3">
+											<label class="form-label">Password</label>
+											<input class="form-control form-control-lg" type="password" name="password" placeholder="Enter your password" />
+										</div>
 
-        <div class="sub-cont">
-            <div class="img">
-                <div class="img__text m--up">
-                    <h3>Don't have an account? Please Sign up!</h3>
-                </div>
-                <div class="img__text m--in">
-                    <h3>If you already have an account, just sign in.</h3>
-                </div>
-                <div class="img__btn">
-                    <span class="m--up">Sign Up</span>
-                    <span class="m--in">Sign In</span>
-                </div>
-            </div>
+										<div class="d-grid gap-2 mt-3">
+											<button class="btn btn-primary" type="submit">Login</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
 
-            <div class="form sign-up">
-                <h2>Create your Account</h2>
-                <form action="{{ route('register') }}" method="POST">
-                    @csrf
-                    <label>
-                        <span>Name</span>
-                        <input type="text" name="name" value="{{ old('name') }}" required />
-                    </label>
-                    <label>
-                        <span>Email</span>
-                        <input type="email" name="email" value="{{ old('email') }}" required />
-                    </label>
-                    <label>
-                        <span>Password</span>
-                        <input type="password" name="password" required />
-                    </label>
-                    <button type="submit" class="submit">Sign Up</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.querySelector('.img__btn').addEventListener('click', function() {
-            document.querySelector('.cont').classList.toggle('s--signup');
-        });
-    </script>
+	<script src="{{ asset('asset_dashboard/js/app.js') }}"></script>
 
 </body>
+
 </html>
