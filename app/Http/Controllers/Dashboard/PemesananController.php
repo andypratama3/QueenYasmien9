@@ -57,11 +57,13 @@ class PemesananController extends Controller
             }
         })
         ->addColumn('status_pembayaran', function($row) {
-            if($row->status_pembayaran == 'pending' || $row->status_pembayaran == 'pending'){
+            $status = trim($row->status_pembayaran); // Hilangkan spasi ekstra
+
+            if($status === 'pending'){
                 return '<span class="badge bg-warning">Pending</span>';
-            } elseif($row->status_pembayaran == 'capture' || $row->status_pembayaran == 'settlement'){
+            } elseif($status === 'capture' || $status === 'settlement'){
                 return '<span class="badge bg-success">Selesai</span>';
-            } elseif($row->status_pembayaran == 'batal' || $row->status_pembayaran == 'expire' || $row->status_pembayaran == 'cancel' || $row->status_pembayaran == 'deny'){
+            } elseif($status === 'batal' || $status === 'expire' || $status == 'cancel' || $status == 'deny'){
                 return '<span class="badge bg-danger">Batal</span>';
             }
         })
