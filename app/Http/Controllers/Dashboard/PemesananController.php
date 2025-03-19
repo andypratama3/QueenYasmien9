@@ -57,7 +57,7 @@ class PemesananController extends Controller
             }
         })
         ->addColumn('status_pembayaran', function($row) {
-            if($row->status_pembayaran == 'pending'){
+            if($row->status_pembayaran == 'pending' || $row->status_pembayaran == 'pending'){
                 return '<span class="badge bg-warning">Pending</span>';
             } elseif($row->status_pembayaran == 'capture' || $row->status_pembayaran == 'settlement'){
                 return '<span class="badge bg-success">Selesai</span>';
