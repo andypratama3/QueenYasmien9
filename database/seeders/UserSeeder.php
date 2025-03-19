@@ -20,14 +20,9 @@ class UserSeeder extends Seeder
             'password' => bcrypt('superadmin@gmail.com'),
         ]);
 
-        // Ambil role 'superadmin' dari database
-        $superadmin = Role::where('name', 'superadmin')->first();
+        $role = Role::firstOrCreate(['name' => 'superadmin']);
 
-        // Pastikan role ditemukan sebelum diberikan ke user
-        if ($superadmin) {
-            $user->assignRole('superadmin');
-        } else {
-            $this->command->error('Role "superadmin" tidak ditemukan.');
-        }
+        // Berikan role ke user baru
+        $user->assignRole($role);
     }
 }
