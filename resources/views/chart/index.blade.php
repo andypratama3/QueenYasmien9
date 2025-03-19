@@ -178,7 +178,7 @@
 </section>
 
 @push('js_user')
-<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT') }}"></script>
+<script src="https://app.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT') }}"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {
