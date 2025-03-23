@@ -129,9 +129,11 @@
                                     <div class="col-md-12 mt-6">
                                         <a href="{{ route('dashboard.pesanan.index') }}" class="btn btn-sm btn-danger">Kembali</a>
                                         {{-- condition when status payment_success or capture --}}
+                                        @if($pemesanan->status_pembayaran == 'capture' || $pemesanan->status_pembayaran == 'settlement')
                                         <a href="{{ route('dashboard.pesanan.cetak-resi', $pemesanan->slug) }}" class="btn btn-sm btn-primary float-end" target="_blank">
                                             Cetak Resi
                                         </a>
+                                        @endif
 
                                     </div>
                                 </div>
