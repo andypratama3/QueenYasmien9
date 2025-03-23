@@ -82,7 +82,7 @@
               </div>
           </div>
         </div>
-        <div class="col-lg-3 col-md-6 col-sm-6">
+        {{-- <div class="col-lg-3 col-md-6 col-sm-6">
           <div class="footer-menu">
             <h5 class="widget-title">Subscribe Us</h5>
             <p>Subscribe to our newsletter to get updates about our grand offers.</p>
@@ -91,7 +91,7 @@
               <button class="btn btn-dark rounded-end rounded-0" type="submit">Subscribe</button>
             </form>
           </div>
-        </div>
+        </div> --}}
 
       </div>
     </div>
