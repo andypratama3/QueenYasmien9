@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Pemesanan;
+use App\Models\Product;
+use App\Models\ProductReseller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -10,27 +12,21 @@ class MidtransPaymentController extends Controller
 {
     public function callback(Request $request)
     {
-        // retrun response oke for receive midtrans notification
-
         if ($request->isMethod('GET')) {
             return response()->json(['message' => 'OK'], 200);
         }
 
-
         try {
             $midtransResponse = $request->all();
 
-            // if (isset($midtransResponse['status_code']) && in_array($midtransResponse['status_code'], ['202', '300', '401', '405'])) {
-            //     DB::table('error_log')->insert([
-            //         'status_code' => $midtransResponse['status_code'],
-            //         'error' => $midtransResponse['status_message'] ?? 'Unknown error',
-            //         'created_at' => now(),
-            //         'updated_at' => now(),
-            //     ]);
-            // }
-
             if (!isset($midtransResponse['order_id'])) {
                 return response()->json(['message' => 'Invalid request, order_id not found'], 400);
+            }
+
+            $pesanan = Pemesanan::where('order_id', $midtransResponse['order_id'])->first();
+
+            if (!$pesanan) {
+                return response()->json(['message' => 'Pesanan Tidak Ditemukan'], 404);
             }
 
             $data = [
@@ -65,37 +61,45 @@ class MidtransPaymentController extends Controller
                 }
             }
 
-            $pesanan = Pemesanan::where('order_id', $midtransResponse['order_id'])->first();
-
-            if (!$pesanan) {
-                return response()->json(['message' => 'Pesanan Tidak Ada'], 404);
-            }
-
             if (in_array($data['transaction_status'], ['settlement', 'capture'])) {
                 $data['transaction_status'] = 'settlement';
-                // kurangin stock
-                $product = Product::find($pesanan->product_id);
-                $product->stock = $product->stock - $pesanan->quantity;
-                $product->save();
+                $products = $pesanan->products;
+
+                foreach ($products as $product) {
+                    if (!$product) {
+                        return response()->json(['message' => 'Produk tidak ditemukan'], 404);
+                    }
+
+                    if ($product->category->name == "Paket Reseller") {
+                        $product_reseller = ProductReseller::where('product_id', $product->id)
+                            ->where('id', $pesanan->products_reseller_id)
+                            ->first();
+
+                        if ($product_reseller) {
+                            $product = Product::where('id', $product_reseller->product_id)->first();
+                            $product->stock -= $pesanan->products->first()->pivot->qty;
+                            $product->save();
+                        }
+                    }
+
+                    $product->stock -= $pesanan->products->first()->pivot->qty;
+                    $product->save();
+                }
             }
 
             if (in_array($pesanan->transaction_status, ['expire', 'cancel'])) {
                 $data['transaction_status'] = 'expire';
             }
 
-
-
             $pesanan->update([
                 'status_pembayaran' => $data['transaction_status'],
                 'status_pemesanan' => 'proses',
             ]);
-
-
 
             return response()->json(['message' => 'Payment data updated successfully'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
     }
-
 }
+

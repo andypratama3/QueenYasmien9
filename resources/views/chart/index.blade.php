@@ -329,6 +329,8 @@
         let resellerPackage = row.querySelector('.reseller-select');
         let quantity = row.querySelector('.qty-input');
 
+        let qtyValue = quantity?.value ? parseInt(quantity.value) : 1;
+
         if (quantity && !quantity.value) {
             quantity.value = 1;
         }
@@ -338,7 +340,7 @@
         }
 
         selectedItems.push(checkbox.value);
-        qtyItems.push(quantity.value); // Memastikan hanya nilai yang dikirim
+        qtyItems.push(qtyValue);
     });
 
     if (selectedItems.length === 0) {
