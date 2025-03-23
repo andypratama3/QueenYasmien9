@@ -130,7 +130,8 @@
                       </figure>
                       <h3>{{ \Str::limit($product->name, 20, '...') }}</h3>
 
-                      <span class="qty">{{ $product->stock }} Unit</span><span class="rating"><svg width="24" height="24" class="text-primary"><use xlink:href="#star-solid"></use></svg> 4.5</span>
+                      <span class="qty">{{ $product->stock }} Unit</span>
+                      {{-- <span class="rating"><svg width="24" height="24" class="text-primary"><use xlink:href="#star-solid"></use></svg> 4.5</span> --}}
                       <span class="price">
                         @if ($product->price)
                         <p>{{ 'Rp. ' . number_format((float) ($product->price ?? 0), 0, ',', '.') }}</p>
@@ -154,9 +155,14 @@
                                 </button>
                             </span>
                         </div>
-                        <button  data-id="{{ $product->id }}" class="btn btn-primary btn-sm d-flex align-items-center cart">
-                            <i class="bx bx-cart-download bx-md me-2"></i> Keranjang
-                        </button>
+                        <div class="d-flex flex-column gap-3">
+                            <button class="btn btn-secondary btn-sm btn-show" data-id="{{ $product->id }}">
+                                <i class="bx bx-info-circle me-2"></i> Lihat Detail Produk
+                              </button>
+                            <button  data-id="{{ $product->id }}" class="btn btn-primary btn-sm d-flex align-items-center cart">
+                                <i class="bx bx-cart-download bx-md me-2"></i> Keranjang
+                            </button>
+                        </div>
 
                       </div>
                     </div>
@@ -184,38 +190,37 @@
 
   <section class="py-5">
     <div class="container-fluid">
-      <div class="row">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="banner-ad bg-danger mb-3" style="background: url('images/ad-image-3.png'); background-repeat: no-repeat; background-position: right bottom;">
+                    <div class="banner-content p-5">
 
-        <div class="col-md-6">
-          <div class="banner-ad bg-danger mb-3" style="background: url('images/ad-image-3.png');background-repeat: no-repeat;background-position: right bottom;">
-            <div class="banner-content p-5">
+                        <!-- Live Streaming -->
+                        <div class="d-flex align-items-center text-primary fs-3 fw-bold">
+                            <i class='bx bxs-video-recording me-2'></i> Live Streaming
+                        </div>
 
-              <div class="categories text-primary fs-3 fw-bold">Upto 25% Off</div>
-              <h3 class="banner-title">Luxa Dark Chocolate</h3>
-              <p>Very tasty & creamy vanilla flavour creamy muffins.</p>
-              <a href="#" class="btn btn-dark text-uppercase">Show Now</a>
+                        <!-- TikTok Username -->
+                        <h3 class="banner-title d-flex align-items-center">
+                            <i class='bx bxl-tiktok me-2'></i> @queenyasmine9
+                        </h3>
 
+                        <!-- Waktu Live -->
+                        <p class="d-flex align-items-center text-black">
+                            <i class='bx bx-time me-2'></i> Live akan dilakukan pada <strong class="ms-1">10:00 setiap hari</strong>
+                        </p>
+
+                        <!-- Tombol Gabung -->
+                        <a href="https://www.tiktok.com/@queenyasmine9" target="_blank" class="btn btn-dark text-uppercase d-flex align-items-center">
+                            <i class='bx bx-play-circle me-2'></i> Gabung Sekarang
+                        </a>
+
+                    </div>
+                </div>
             </div>
-
-          </div>
         </div>
-        <div class="col-md-6">
-          <div class="banner-ad bg-info" style="background: url('images/ad-image-4.png');background-repeat: no-repeat;background-position: right bottom;">
-            <div class="banner-content p-5">
-
-              <div class="categories text-primary fs-3 fw-bold">Upto 25% Off</div>
-              <h3 class="banner-title">Creamy Muffins</h3>
-              <p>Very tasty & creamy vanilla flavour creamy muffins.</p>
-              <a href="#" class="btn btn-dark text-uppercase">Show Now</a>
-
-            </div>
-
-          </div>
-        </div>
-
-      </div>
     </div>
-  </section>
+</section>
 
   <section class="py-5 overflow-hidden">
     <div class="container-fluid">
@@ -271,6 +276,7 @@
                             </button>
                         </span>
                     </div>
+
                 <button  data-id="{{ $product->id }}" class="btn btn-primary btn-sm d-flex align-items-center cart mt-2">
                     <i class="bx bx-cart-download bx-md me-2"></i> Keranjang
                 </button>
@@ -366,60 +372,134 @@
 
   <section class="py-5">
     <div class="container-fluid">
-     <!-- Pastikan Anda sudah memuat Boxicons -->
-<link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
-
-<div class="row row-cols-1 row-cols-md-5 g-4">
-    <div class="col">
-        <div class="card h-100 text-center">
-            <div class="card-body">
-                <i class="bx bx-check-shield text-primary" style="font-size: 3rem;"></i>
-                <h5 class="card-title mt-3">Produk Berkualitas</h5>
-                <p class="card-text">Kami menyediakan produk pilihan dengan standar kualitas terbaik untuk memastikan kepuasan pelanggan.</p>
+        <div class="row row-cols-1 row-cols-md-5 g-4">
+            <div class="col">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bx bx-check-shield text-primary" style="font-size: 3rem;"></i>
+                        <h5 class="card-title mt-3">Produk Berkualitas</h5>
+                        <p class="card-text">Kami menyediakan produk pilihan dengan standar kualitas terbaik untuk memastikan kepuasan pelanggan.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bx bxs-truck" style="font-size: 3rem;"></i>
+                        <h5 class="card-title mt-3">Pengiriman Cepat</h5>
+                        <p class="card-text">Pesanan Anda dikirim dengan layanan ekspedisi terpercaya agar sampai dengan aman dan tepat waktu.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bx bx-money text-primary" style="font-size: 3rem;"></i>
+                        <h5 class="card-title mt-3">Harga Terjangkau</h5>
+                        <p class="card-text">Kami menawarkan harga kompetitif dengan kualitas unggulan, memastikan Anda mendapatkan nilai terbaik.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bx bx-support" style="font-size: 3rem; color: red;"></i>
+                        <h5 class="card-title mt-3">Layanan 24/7</h5>
+                        <p class="card-text">Tim kami siap melayani Anda kapan saja, memberikan dukungan cepat dan responsif setiap saat.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="bx bx-lock-alt"  style="font-size: 3rem; color: #18469c;"></i>
+                        <h5 class="card-title mt-3">Jaminan Keamanan</h5>
+                        <p class="card-text">Setiap transaksi dijamin aman dengan sistem enkripsi canggih untuk melindungi data Anda.</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col">
-        <div class="card h-100 text-center">
-            <div class="card-body">
-                <i class="bx bxs-truck" style="font-size: 3rem;"></i>
-                <h5 class="card-title mt-3">Pengiriman Cepat</h5>
-                <p class="card-text">Pesanan Anda dikirim dengan layanan ekspedisi terpercaya agar sampai dengan aman dan tepat waktu.</p>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card h-100 text-center">
-            <div class="card-body">
-                <i class="bx bx-money text-primary" style="font-size: 3rem;"></i>
-                <h5 class="card-title mt-3">Harga Terjangkau</h5>
-                <p class="card-text">Kami menawarkan harga kompetitif dengan kualitas unggulan, memastikan Anda mendapatkan nilai terbaik.</p>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card h-100 text-center">
-            <div class="card-body">
-                <i class="bx bx-support" style="font-size: 3rem; color: red;"></i>
-                <h5 class="card-title mt-3">Layanan 24/7</h5>
-                <p class="card-text">Tim kami siap melayani Anda kapan saja, memberikan dukungan cepat dan responsif setiap saat.</p>
-            </div>
-        </div>
-    </div>
-    <div class="col">
-        <div class="card h-100 text-center">
-            <div class="card-body">
-                <i class="bx bx-lock-alt"  style="font-size: 3rem; color: #18469c;"></i>
-                <h5 class="card-title mt-3">Jaminan Keamanan</h5>
-                <p class="card-text">Setiap transaksi dijamin aman dengan sistem enkripsi canggih untuk melindungi data Anda.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
     </div>
   </section>
+  <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="productModalLabel">Produk </h5>
+          <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-5 text-center">
+              <img id="modalProductImage" src="" class="img-fluid rounded shadow mb-2" alt="Produk">
+            </div>
+            <div class="col-md-7">
+              <h4 id="modalProductName" class="fw-bold mt-2"></h4>
+              <p id="modalProductCategory" class="text-muted"></p>
+              <p id="modalProductStock" class="text-muted"></p>
+              <p id="modalProductSellCount" class="text-muted"></p>
+              <h5 id="modalProductPrice" class="text-black"></h5>
+              <h6 id="modalProductPriceReseller" class="text-success"></h6>
+              <div class="form-group">
+                <h6>Deskripsi</h6>
+                <p id="modalProductDescription"></p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 @push('js_user')
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#product').on('click', '.btn-show', function () {
+            let product_id = this.dataset.id; // Ambil ID produk dari dataset
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('product.detail', ':id') }}".replace(':id', product_id),
+                dataType: "json",
+                success: function (response) {
+                    if (response.status === 'success') {
+                        let product = response.data;
+                        let assetUrl = "{{ asset('storage/product/') }}";
+
+                        // Set data ke modal
+                        $('#modalProductImage').attr('src', `${assetUrl}/${product.foto}`);
+                        $('#modalProductName').text(product.name);
+                        $('#modalProductCategory').text(`Kategori: ${product.category_id}`);
+                        $('#modalProductStock').text(`Stok: ${product.stock} Unit`);
+                        $('#modalProductSellCount').text(`Terjual: ${product.sell_count ?? 0} Unit`);
+                        $('#modalProductPrice').text(`Rp. ${new Intl.NumberFormat('id-ID').format(product.price)}`);
+
+                        // Hilangkan harga reseller karena tidak ada dalam response
+                        $('#modalProductPriceReseller').hide();
+
+                        // Appenda data id ke button tambah ke keranjang
+
+                        // Render deskripsi dengan HTML
+                        $('#modalProductDescription').html(product.desc || "Tidak ada deskripsi.");
+
+                        // Tampilkan modal
+                        let modal = new bootstrap.Modal($('#productModal')[0]);
+                        modal.show();
+                    } else {
+                        alert("Gagal mengambil data produk.");
+                    }
+                },
+                error: function () {
+                    alert("Terjadi kesalahan dalam mengambil data produk.");
+                }
+            });
+        });
+    });
+</script>
+
+
 
 <script>
     $(document).ready(function() {

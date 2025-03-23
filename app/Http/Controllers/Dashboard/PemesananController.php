@@ -70,12 +70,18 @@ class PemesananController extends Controller
         ->addColumn('gross_amount', function ($row) {
             return 'Rp. ' . number_format((float) ($row->gross_amount ?? 0), 0, ',', '.');
         })
-        ->addColumn('action' , function($row){
-            $actions = '';
-            $actions .= '<a href="' . route('dashboard.pesanan.show', $row->slug) . '" class="btn btn-sm btn-secondary me-2 "><i class="bx bxs-show"></i></a>';
-            $actions .= '<a href="' . route('dashboard.pesanan.edit', $row->slug) . '" class="btn btn-sm btn-primary me-2 "><i class="bx bxs-edit"></i></a>';
-            $actions .= '<button data-id="'.$row['slug'].'" class="btn btn-sm btn-danger btn-delete me-2"><i class="bx bxs-trash"></i></button>';
-            return $actions;
+        ->addColumn('action', function ($row) {
+            return '<div class="d-flex gap-2">
+                        <a href="' . route('dashboard.pesanan.show', $row->slug) . '" class="btn btn-sm btn-secondary">
+                            <i class="bx bxs-show"></i>
+                        </a>
+                        <a href="' . route('dashboard.pesanan.edit', $row->slug) . '" class="btn btn-sm btn-primary">
+                            <i class="bx bxs-edit"></i>
+                        </a>
+                        <button data-id="' . $row['slug'] . '" class="btn btn-sm btn-danger btn-delete">
+                            <i class="bx bxs-trash"></i>
+                        </button>
+                    </div>';
         })
         ->rawColumns([
             'status_pemesanan',
@@ -113,14 +119,19 @@ class PemesananController extends Controller
     public function destroy($slug)
     {
         $pemesanan = Pemesanan::where('slug', $slug)->firstOrFail();
+
+        // Hapus data terkait di product_checkout terlebih dahulu
+        $pemesanan->products()->detach();
+
+        // Baru hapus pemesanan
         $actions = $pemesanan->delete();
 
-        if($actions) {
-            return response()->json(['status' => 'success','message' => 'Berhasil Menghapus Data']);
+        if ($actions) {
+            return response()->json(['status' => 'success', 'message' => 'Berhasil Menghapus Data']);
         } else {
-            return response()->json(['status' => 'error','message' => 'Gagal Menghapus Data']);
-
+            return response()->json(['status' => 'error', 'message' => 'Gagal Menghapus Data']);
         }
     }
+
 }
 

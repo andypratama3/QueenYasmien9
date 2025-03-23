@@ -62,4 +62,14 @@ class PesananController extends Controller
 
         return response()->json(['snap_token' => $snapToken]); // Kembalikan token untuk digunakan di frontend
     }
+
+    public function show($order_id)
+    {
+        if(Auth::check()) {
+            // check order_id
+            $pesanan = Pemesanan::where('order_id', $order_id)->where('user_id', Auth::id())->firstOrFail();
+
+            return view('pesanan.show', compact('pesanan'));
+        }
+    }
 }

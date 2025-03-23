@@ -128,7 +128,11 @@
 
                                     <div class="col-md-12 mt-6">
                                         <a href="{{ route('dashboard.pesanan.index') }}" class="btn btn-sm btn-danger">Kembali</a>
-                                        <button type="submit" class="btn-sm btn btn-primary">Simpan Perubahan</button>
+                                        {{-- condition when status payment_success or capture --}}
+                                        <a href="{{ route('dashboard.pesanan.cetak-resi', $pemesanan->slug) }}" class="btn btn-sm btn-primary float-end" target="_blank">
+                                            Cetak Resi
+                                        </a>
+
                                     </div>
                                 </div>
                             </form>

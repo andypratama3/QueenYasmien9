@@ -73,6 +73,10 @@ class MidtransPaymentController extends Controller
 
             if (in_array($data['transaction_status'], ['settlement', 'capture'])) {
                 $data['transaction_status'] = 'settlement';
+                // kurangin stock
+                $product = Product::find($pesanan->product_id);
+                $product->stock = $product->stock - $pesanan->quantity;
+                $product->save();
             }
 
             if (in_array($pesanan->transaction_status, ['expire', 'cancel'])) {
@@ -85,6 +89,8 @@ class MidtransPaymentController extends Controller
                 'status_pembayaran' => $data['transaction_status'],
                 'status_pemesanan' => 'proses',
             ]);
+
+
 
             return response()->json(['message' => 'Payment data updated successfully'], 200);
         } catch (\Exception $e) {
