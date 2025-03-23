@@ -32,12 +32,12 @@ Route::get('/',[HomeController::class, 'index'])->name('home');
 
 Route::resource('catalog', CatalogController::class, ['names' => 'catalog'])->except(['create','store','edit','update','destroy']);
 Route::get('tentang', AboutController::class)->name('about.index');
+Route::get('produks/detail', [ProductController::class, 'show'])->name('product.detail');
 
 Route::group(['prefix' => '/', 'middleware' => 'auth','verified'], function () {
+    Route::get('produk', [ProductController::class, 'index'])->name('product.index');
     Route::resource('cart', ChartController::class, ['names' => 'cart']);
 
-    Route::get('produk', [ProductController::class, 'index'])->name('product.index');
-    Route::get('produks/detail/{id}', [ProductController::class, 'show'])->name('product.detail');
     Route::get('pesanan', [PesananController::class, 'index'])->name('pesanan.index');
     Route::get('pesanans/detail/{id}/', [PesananController::class, 'show'])->name('pesanan.detail');
     Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');

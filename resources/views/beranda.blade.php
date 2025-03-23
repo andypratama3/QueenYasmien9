@@ -95,98 +95,59 @@
 </section>
 
 
-  <section class="py-5">
+<section class="py-5">
     <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="bootstrap-tabs product-tabs" id="product">
+                    <div class="tabs-header d-flex justify-content-between border-bottom my-5">
+                        <h3>Produk</h3>
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <!-- Tab Semua Produk -->
+                                <a href="#" class="nav-link text-uppercase fs-6 active" id="nav-all-tab" data-bs-toggle="tab" data-bs-target="#nav-all">All</a>
 
-      <div class="row">
-        <div class="col-md-12">
-
-          <div class="bootstrap-tabs product-tabs" id="product">
-            <div class="tabs-header d-flex justify-content-between border-bottom my-5">
-              <h3>Produk</h3>
-              <nav>
-                <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                  <a href="#" class="nav-link text-uppercase fs-6 active" id="nav-all-tab" data-bs-toggle="tab" data-bs-target="#nav-all">All</a>
-                  {{-- @foreach ($categorys as $category)
-                    <a href="#" class="nav-link text-uppercase fs-6" id="nav-{{ $category->slug }}-tab" data-bs-toggle="tab" data-bs-target="#nav-{{ $category->slug }}">{{ $category->name }}</a>
-                  @endforeach --}}
-                </div>
-              </nav>
-            </div>
-            <div class="tab-content" id="nav-tabContent">
-              <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
-
-                <div class="product-grid row row-cols-1 row-cols-sm-4 row-cols-md-2 row-cols-lg-2 row-cols-xl-3">
-                  @forelse ($products as $product)
-
-                  <div class="col">
-                    <div class="product-item">
-                      {{-- <span class="badge bg-success position-absolute m-3">-30%</span> --}}
-
-                      <figure>
-                        <a href="{{ asset('storage/product/' . $product->foto ) }}" data-lightbox="product" title="{{ $product->name }}">
-                          <img src="{{ asset('storage/product/'. $product->foto) }}"  class="tab-image">
-                        </a>
-                      </figure>
-                      <h3>{{ \Str::limit($product->name, 20, '...') }}</h3>
-
-                      <span class="qty">{{ $product->stock }} Unit</span>
-                      {{-- <span class="rating"><svg width="24" height="24" class="text-primary"><use xlink:href="#star-solid"></use></svg> 4.5</span> --}}
-                      <span class="price">
-                        @if ($product->price)
-                        <p>{{ 'Rp. ' . number_format((float) ($product->price ?? 0), 0, ',', '.') }}</p>
-                        @elseif ($product->product_reseller->isNotEmpty())
-                            {{ 'Rp. ' . number_format((float) $product->product_reseller->first()->price_reseller, 0, ',', '.') }}
-                        @endif
-                    </span>
-
-
-                      <div class="d-flex align-items-center justify-content-between">
-                        <div class="input-group product-qty">
-                            <span class="input-group-btn">
-                                <button type="button" class="quantity-left-minus btn btn-danger btn-number" data-type="minus">
-                                    <i class="bx bx-minus"></i>
-                                </button>
-                            </span>
-                            <input type="text" id="quantity" name="quantity" {{ $product->stock == 0 ? 'disabled' : '' }} class="form-control input-number" value="1">
-                            <span class="input-group-btn">
-                                <button type="button" class="quantity-right-plus btn btn-success btn-number" data-type="plus">
-                                    <i class="bx bx-plus"></i>
-                                </button>
-                            </span>
-                        </div>
-                        <div class="d-flex flex-column gap-3">
-                            <button class="btn btn-secondary btn-sm btn-show" data-id="{{ $product->id }}">
-                                <i class="bx bx-info-circle me-2"></i> Lihat Detail Produk
-                              </button>
-                            <button  data-id="{{ $product->id }}" class="btn btn-primary btn-sm d-flex align-items-center cart">
-                                <i class="bx bx-cart-download bx-md me-2"></i> Keranjang
-                            </button>
-                        </div>
-
-                      </div>
+                                <!-- Tab berdasarkan kategori -->
+                                @foreach ($categories as $category)
+                                    <a href="#" class="nav-link text-uppercase fs-6" id="nav-{{ $category->id }}-tab" data-bs-toggle="tab" data-bs-target="#nav-{{ $category->id }}">
+                                        {{ $category->name }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </nav>
                     </div>
-                  </div>
-                  @empty
 
-                  @endforelse
+                    <div class="tab-content" id="nav-tabContent">
+                        <!-- Semua Produk -->
+                        <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
+                            <div class="product-grid row row-cols-1 row-cols-sm-4 row-cols-md-2 row-cols-lg-2 row-cols-xl-3">
+                                @forelse ($products as $product)
+                                    @include('product-item', ['product' => $product])
+                                @empty
+                                    <p class="text-center text-muted">Tidak ada produk</p>
+                                @endforelse
+                            </div>
+                        </div>
+
+                        <!-- Produk Berdasarkan Kategori -->
+                        @foreach ($categories as $category)
+                            <div class="tab-pane fade" id="nav-{{ $category->id }}" role="tabpanel" aria-labelledby="nav-{{ $category->id }}-tab">
+                                <div class="product-grid row row-cols-1 row-cols-sm-4 row-cols-md-2 row-cols-lg-2 row-cols-xl-3">
+                                    @forelse ($category->products as $product)
+                                        @include('product-item', ['product' => $product])
+                                    @empty
+                                        <p class="text-center text-muted">Tidak ada produk</p>
+                                    @endforelse
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
-              </div>
-
-              <div class="tab-pane fade" id="nav-fruits" role="tabpanel" aria-labelledby="nav-fruits-tab">
-
-
-                <!-- / product-grid -->
-              </div>
-
-
             </div>
-          </div>
-
         </div>
-      </div>
     </div>
-  </section>
+</section>
+
 
   <section class="py-5">
     <div class="container-fluid">
@@ -422,46 +383,37 @@
     </div>
   </section>
   <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title" id="productModalLabel">Produk </h5>
-          <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-md-5 text-center">
-              <img id="modalProductImage" src="" class="img-fluid rounded shadow mb-2" alt="Produk">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalProductName"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="col-md-7">
-              <h4 id="modalProductName" class="fw-bold mt-2"></h4>
-              <p id="modalProductCategory" class="text-muted"></p>
-              <p id="modalProductStock" class="text-muted"></p>
-              <p id="modalProductSellCount" class="text-muted"></p>
-              <h5 id="modalProductPrice" class="text-black"></h5>
-              <h6 id="modalProductPriceReseller" class="text-success"></h6>
-              <div class="form-group">
-                <h6>Deskripsi</h6>
+            <div class="modal-body">
+                <img id="modalProductImage" src="" class="img-fluid mb-3">
+                <p id="modalProductCategory"></p>
+                <p id="modalProductStock"></p>
+                <p id="modalProductSellCount"></p>
+                <p id="modalProductPrice"></p>
+                <div id="modalProductPriceReseller" style="display: none;"></div>
                 <p id="modalProductDescription"></p>
-              </div>
-
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
+
 
 
 @push('js_user')
 <script type="text/javascript">
     $(document).ready(function () {
         $('#product').on('click', '.btn-show', function () {
-            let product_id = this.dataset.id; // Ambil ID produk dari dataset
+            let product_id = $(this).data('id');
 
             $.ajax({
                 type: "GET",
-                url: "{{ route('product.detail', ':id') }}".replace(':id', product_id),
+                url: "{{ route('product.detail') }}",
+                data: { product_id: product_id },
                 dataType: "json",
                 success: function (response) {
                     if (response.status === 'success') {
@@ -471,15 +423,25 @@
                         // Set data ke modal
                         $('#modalProductImage').attr('src', `${assetUrl}/${product.foto}`);
                         $('#modalProductName').text(product.name);
-                        $('#modalProductCategory').text(`Kategori: ${product.category_id}`);
+                        $('#modalProductCategory').text(`Kategori: ${product.category.name}`);
                         $('#modalProductStock').text(`Stok: ${product.stock} Unit`);
                         $('#modalProductSellCount').text(`Terjual: ${product.sell_count ?? 0} Unit`);
-                        $('#modalProductPrice').text(`Rp. ${new Intl.NumberFormat('id-ID').format(product.price)}`);
+                        $('#modalProductPrice').text(`Rp. ${product.price_formatted}`);
 
-                        // Hilangkan harga reseller karena tidak ada dalam response
-                        $('#modalProductPriceReseller').hide();
+                        // Jika kategori adalah "Paket Reseller", tampilkan daftar harga reseller
+                        let resellerHTML = "";
+                        if (product.category.name === "Paket Reseller") {
+                            response.product_resellers.forEach((reseller) => {
+                                resellerHTML += `<li>${reseller.name} - Rp. ${reseller.price_formatted || "Harga tidak tersedia"}</li>`;
+                            });
+                        }
 
-                        // Appenda data id ke button tambah ke keranjang
+                        if (resellerHTML) {
+                            $('#modalProductPrice').hide();
+                            $('#modalProductPriceReseller').html(`<ul>${resellerHTML}</ul>`).show();
+                        } else {
+                            $('#modalProductPriceReseller').hide();
+                        }
 
                         // Render deskripsi dengan HTML
                         $('#modalProductDescription').html(product.desc || "Tidak ada deskripsi.");

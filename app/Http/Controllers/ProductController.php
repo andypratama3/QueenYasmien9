@@ -12,22 +12,29 @@ class ProductController extends Controller
         return view('product.index');
     }
 
-    public function show($id)
+    public function show(Request $request)
     {
-        $product = Product::find($id)->firstOrFail();
+        $product = Product::with('category', 'product_reseller')->findOrFail($request->product_id);
 
-        if($product) {
-            return response()->json([
-                'status' => 'success',
-                'data' => $product
-            ]);
-        } else {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Product not found'
-            ], 404);
+        // Pre-format the price using PHP's number_format
+        $product->price_formatted = number_format($product->price, 0, ',', '.');
+
+        // If product category is "Paket Reseller", you can also format the reseller prices
+        $product_resellers = [];
+        if ($product->category && $product->category->name === 'Paket Reseller') {
+            $product_resellers = $product->product_reseller->map(function ($reseller) {
+                $reseller->price_formatted = number_format($reseller->price_reseller, 0, ',', '.');
+                return $reseller;
+            });
         }
 
+        return response()->json([
+            'status' => 'success',
+            'data' => $product,
+            'product_resellers' => $product_resellers
+        ]);
     }
+
+
 
 }

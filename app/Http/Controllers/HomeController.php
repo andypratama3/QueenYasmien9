@@ -15,10 +15,10 @@ class HomeController extends Controller
         $visitor->save();
 
 
-        $categorys = Category::orderBy('name', 'asc')->get();
+        $categories = Category::orderBy('name', 'asc')->get();
         $products = Product::orderBy('created_at','asc')->get();
-        
+
         $products_best = Product::orderBy('sell_count', 'desc')->limit(10)->get();
-        return view('beranda', compact('products', 'categorys','products_best'));
+        return view('beranda', compact('products', 'categories','products_best'));
     }
 }
